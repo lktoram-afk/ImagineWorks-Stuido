@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171816">
+  <meta name="description" content="ImagineWorks Studio — Capturing Your Imagination Into Reality. Jelajahi galeri, pilih tanggal, dan booking sesi fotografi profesional.">
+  <title>ImagineWorks Studio — Capturing Your Imagination Into Reality</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="bg-ink text-paper antialiased">
+  <div class="site-shell">
+    <aside class="sidebar" aria-label="Navigasi utama">
+      <a class="brand-lockup" href="index.html" aria-label="ImagineWorks Studio, Beranda">
+        <img class="brand-logo" src="assets/images/imagineworks-logo.png" alt="ImagineWorks Studio">
+      </a>
+      <div class="sidebar-rule"></div>
+      <p class="eyebrow sidebar-label">Jelajahi</p>
+      <nav class="side-nav">
+        <a class="nav-link active" href="index.html"><span class="nav-index">01</span><span>Galeri</span><span class="nav-arrow">↗</span></a>
+        <a class="nav-link" href="booking.html"><span class="nav-index">02</span><span>Booking sesi</span></a>
+        <a class="nav-link" href="cek-pesanan.html"><span class="nav-index">03</span><span>Cek pesanan</span></a>
+        <a class="nav-link" href="foto-saya.html"><span class="nav-index">04</span><span>Foto saya</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <p class="eyebrow">Ruang untuk cerita Anda</p>
+        <a class="sidebar-cta" href="booking.html">Rencanakan sesi <span>↗</span></a>
+        <div class="sidebar-contact"><span class="status-dot"></span> Sesi baru dibuka <span class="contact-sep">·</span> Jakarta</div>
+      </div>
+      <a class="admin-link" href="admin.html">Super Admin <span>↗</span></a>
+    </aside>
+
+    <main class="main-content">
+      <div class="mobile-topbar">
+        <a class="brand-lockup" href="index.html"><img class="brand-logo" src="assets/images/imagineworks-logo.png" alt="ImagineWorks Studio"></a>
+        <details class="mobile-menu"><summary aria-label="Buka navigasi">☰</summary><nav><a href="index.html">Galeri</a><a href="booking.html">Booking sesi</a><a href="cek-pesanan.html">Cek pesanan</a><a href="foto-saya.html">Foto saya</a></nav></details>
+      </div>
+
+      <div class="announcement" role="region" aria-label="Pengumuman studio">
+        <span class="announcement-label"><span class="status-dot"></span> CATATAN STUDIO</span>
+        <div class="ticker-viewport" id="running-text" hx-get="/api/running-text" hx-trigger="load" hx-swap="innerHTML"><div class="ticker-track"><span>Jadwalkan sesi foto personal untuk cerita yang tak ingin berlalu begitu saja.</span><span aria-hidden="true">Jadwalkan sesi foto personal untuk cerita yang tak ingin berlalu begitu saja.</span></div></div>
+        <a href="booking.html" class="announcement-link">Lihat sesi <span>↗</span></a>
+      </div>
+
+      <section class="hero-section" aria-labelledby="hero-title">
+        <img class="hero-image" src="/manus-storage/async-images/RYtbce1kfB3pkVJSRbStW1/image-1.webp" alt="Pelari bergerak menembus cahaya senja dalam foto editorial ImagineWorks Studio" fetchpriority="high">
+        <div class="hero-shade"></div>
+        <div class="hero-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="hero-meta"><span>STUDIO JOURNAL / 001</span><span>JAKARTA · 2026</span></div>
+        <div class="hero-copy">
+          <p class="eyebrow hero-kicker"><span class="amber-line"></span> FOTO YANG TERASA SEPERTI CERITA</p>
+          <h1 id="hero-title">Capturing Your<br><em>Imagination</em><br>Into Reality.</h1>
+          <p class="hero-description">Momen bergerak. Cahaya berubah. Kami menangkap yang membuatnya berarti.</p>
+          <div class="hero-actions"><a class="button-primary" href="#gallery-section">Jelajahi galeri <span>↘</span></a><a class="button-quiet" href="booking.html">Pesan sesi <span>↗</span></a></div>
+        </div>
+        <div class="hero-caption"><span class="caption-index">FIG. 01</span><span>STILL IN MOTION</span><span class="caption-line"></span></div>
+      </section>
+
+      <section class="intro-strip" aria-label="Tentang studio">
+        <p class="intro-lead">Gambar yang baik<br><em>menyimpan rasa.</em></p>
+        <p class="intro-copy">Dari garis akhir hingga momen paling personal, ImagineWorks mendekatkan cerita Anda ke dalam bingkai yang layak dikenang.</p>
+        <a class="text-link" href="booking.html">Kenali layanan kami <span>↗</span></a>
+      </section>
+
+      <section class="gallery-section" id="gallery-section" aria-labelledby="gallery-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">ARSIP TERBUKA · PILIH CERITA</p><h2 id="gallery-title">Temukan <em>momenmu.</em></h2></div>
+          <span class="archive-count">IW / 2026</span>
+        </div>
+        <form class="gallery-controls" hx-get="/api/gallery" hx-trigger="change, submit" hx-target="#gallery-results" hx-swap="innerHTML">
+          <label class="control-field"><span>KATEGORI</span><select name="category"><option value="">Semua kategori</option><option value="sports_running">Sports / Lari</option><option value="events">Events / Acara</option><option value="personal_session">Sesi Foto Pribadi</option></select></label>
+          <label class="control-field"><span>TANGGAL</span><input type="date" name="event_date" aria-label="Pilih tanggal event"></label>
+          <button class="filter-button" type="submit">Muat galeri <span>↗</span></button>
+        </form>
+        <div class="gallery-note"><span class="note-glyph">✳</span><p>Pilih kategori atau tanggal untuk membuka arsip. Album privat akan meminta PIN sebelum preview dimuat.</p></div>
+        <div id="gallery-results" class="gallery-results" hx-get="/api/gallery" hx-trigger="load" hx-target="this" hx-swap="innerHTML" aria-live="polite">
+          <div class="empty-state"><span class="empty-index">ARCHIVE / READY</span><p>Galeri akan tampil di sini setelah arsip dipilih.</p><span class="empty-mark">◎</span></div>
+        </div>
+        <div id="order-quote" class="form-result" aria-live="polite"></div>
+        <div id="checkout-result" class="form-result" aria-live="polite"></div>
+        <p class="watermark-note"><span class="watermark-swatch" aria-hidden="true"></span> Preview publik dilindungi watermark diagonal @ImagineWorks Studio.</p>
+      </section>
+
+      <section class="service-band" aria-label="Layanan studio">
+        <div><p class="eyebrow">DI LUAR BINGKAI</p><h2>Setiap momen punya<br><em>cara bercerita.</em></h2></div>
+        <a class="service-item" href="booking.html"><span>01</span><strong>Sesi personal</strong><small>Potret dengan ruang untuk menjadi diri sendiri.</small><b>↗</b></a>
+        <a class="service-item" href="booking.html"><span>02</span><strong>Acara & perayaan</strong><small>Hari penting, ditangkap tanpa kehilangan spontanitas.</small><b>↗</b></a>
+        <a class="service-item" href="booking.html"><span>03</span><strong>Sports / lari</strong><small>Energi, gerak, dan detik sebelum garis akhir.</small><b>↗</b></a>
+      </section>
+
+      <footer class="site-footer"><a class="footer-brand" href="index.html">ImagineWorks Studio</a><span>CAPTURING YOUR IMAGINATION INTO REALITY</span><a href="booking.html">Mari bercerita <span>↗</span></a></footer>
+    </main>
+  </div>
+  <form hidden hx-post="/api/auth" hx-trigger="load, every 10m" hx-target="this" hx-swap="none" aria-hidden="true"><input type="hidden" name="action" value="refresh"></form>
+</body>
+</html>
