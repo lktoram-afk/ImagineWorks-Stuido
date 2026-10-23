@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Cek status transaksi dan akses ulang foto ImagineWorks Studio.">
+  <title>Cek Pesanan — ImagineWorks Studio</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="https://cdn.tailwindcss.com"></script><script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="bg-ink text-paper antialiased"><div class="site-shell">
+  <aside class="sidebar"><a class="brand-lockup" href="index.html"><img class="brand-logo" src="assets/images/imagineworks-logo.png" alt="ImagineWorks Studio"></a><div class="sidebar-rule"></div><p class="eyebrow sidebar-label">Jelajahi</p><nav class="side-nav"><a class="nav-link" href="index.html"><span class="nav-index">01</span><span>Galeri</span></a><a class="nav-link" href="booking.html"><span class="nav-index">02</span><span>Booking sesi</span></a><a class="nav-link active" href="cek-pesanan.html"><span class="nav-index">03</span><span>Cek pesanan</span><span class="nav-arrow">↗</span></a><a class="nav-link" href="foto-saya.html"><span class="nav-index">04</span><span>Foto saya</span></a></nav><div class="sidebar-bottom"><p class="eyebrow">Kode transaksi ada di email</p><a class="sidebar-cta" href="index.html">Buka galeri <span>↗</span></a><div class="sidebar-contact"><span class="status-dot"></span> Bantuan akses pesanan</div></div></aside>
+  <main class="main-content"><div class="mobile-topbar"><a class="brand-lockup" href="index.html"><img class="brand-logo" src="assets/images/imagineworks-logo.png" alt="ImagineWorks Studio"></a><details class="mobile-menu"><summary aria-label="Buka navigasi">☰</summary><nav><a href="index.html">Galeri</a><a href="booking.html">Booking sesi</a><a href="cek-pesanan.html">Cek pesanan</a><a href="foto-saya.html">Foto saya</a></nav></details></div>
+    <div class="page-wrap"><div class="page-topline"><span>IMAGINEWORKS / AFTERSALES</span><span>03 — 04</span></div><p class="eyebrow" style="margin-top:31px">AKSES ULANG DENGAN AMAN</p><h1 class="page-title">Temukan<br><em>pesanan Anda.</em></h1><p class="page-intro">Masukkan email checkout dan kode transaksi unik yang dikirimkan studio. Tautan unduh hanya tersedia setelah pembayaran dikonfirmasi dan selama masa akses berlaku.</p>
+      <form class="form-panel" hx-post="/api/check-order" hx-target="#order-result" hx-swap="innerHTML">
+        <div class="form-grid">
+          <div class="form-field full"><label for="email">EMAIL CHECKOUT</label><input id="email" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="Email yang digunakan saat checkout"></div>
+          <div class="form-field full"><label for="order_code">KODE TRANSAKSI</label><input id="order_code" name="order_code" required maxlength="14" pattern="#?TRX-[A-Za-z0-9]{8}" placeholder="#TRX-XXXXXXXX" aria-describedby="code-help"><span class="form-hint" id="code-help">Format kode: #TRX-XXXXXXXX. Kode dan email harus cocok dengan pesanan.</span></div>
+        </div>
+        <button class="form-submit" type="submit">Periksa pesanan <span>↗</span></button><span class="htmx-indicator" aria-live="polite">Memeriksa…</span>
+        <div id="order-result" class="form-result" aria-live="polite"></div>
+      </form>
+    </div><footer class="site-footer"><a class="footer-brand" href="index.html">ImagineWorks Studio</a><span>CAPTURING YOUR IMAGINATION INTO REALITY</span><a href="index.html">Kembali ke galeri <span>↗</span></a></footer>
+  </main>
+</div></body></html>
