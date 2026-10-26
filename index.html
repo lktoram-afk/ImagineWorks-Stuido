@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#121212">
+  <meta name="description" content="ImagineWorks Studio — fotografi personal, olahraga, dan perayaan dalam cerita visual yang sinematik.">
+  <title>ImagineWorks Studio — Moments, Made Cinematic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { ink: '#121212', panel: '#1A1A1A', gold: '#E5C158', flame: '#F97316' }, fontFamily: { sans: ['DM Sans', 'sans-serif'], serif: ['Playfair Display', 'serif'] } } }
+    };
+  </script>
+  <style>
+    :root { color-scheme: dark; --ink:#121212; --panel:#1A1A1A; --gold:#E5C158; --flame:#F97316; --muted:#a6a29a; --hero-image:url('/manus-storage/imagineworks-hero_4da0169e.jpg'); }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:5rem; }
+    body { margin:0; background:var(--ink); color:#f5f1e8; font-family:'DM Sans',sans-serif; }
+    button,input,select,textarea { font:inherit; }
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+    .serif { font-family:'Playfair Display',serif; }
+    .sidebar { width:272px; background:#171716; border-right:1px solid rgba(229,193,88,.12); }
+    .main-shell { margin-left:272px; min-height:100vh; }
+    .eyebrow { color:var(--gold); font-size:.67rem; letter-spacing:.22em; text-transform:uppercase; font-weight:700; }
+    .gold-line { height:1px; background:linear-gradient(90deg,var(--gold),transparent); }
+    .ticker { overflow:hidden; white-space:nowrap; }
+    .ticker-track { display:inline-block; min-width:200%; animation:ticker 28s linear infinite; }
+    @keyframes ticker { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+    .hero { min-height:390px; position:relative; isolation:isolate; overflow:hidden; background:#191817; }
+    .hero::before { content:""; position:absolute; inset:0; z-index:-2; background:linear-gradient(90deg,rgba(18,18,18,.98) 0%,rgba(18,18,18,.87) 42%,rgba(18,18,18,.2) 100%),var(--hero-image) center 55%/cover no-repeat; transform:scale(1.01); }
+    .hero::after { content:""; position:absolute; inset:auto 0 0; height:1px; background:linear-gradient(90deg,transparent,rgba(229,193,88,.65),transparent); }
+    .hero-orb { position:absolute; right:8%; top:10%; width:210px; height:210px; border:1px solid rgba(229,193,88,.16); border-radius:50%; box-shadow:0 0 0 24px rgba(229,193,88,.025),0 0 0 48px rgba(229,193,88,.018); pointer-events:none; }
+    .nav-link { display:flex; align-items:center; gap:.8rem; border-radius:12px; padding:.8rem .9rem; color:#c6c1b7; transition:background .2s,color .2s,transform .2s; }
+    .nav-link:hover,.nav-link.active { background:rgba(229,193,88,.09); color:#fff3c7; transform:translateX(2px); }
+    .nav-number { color:var(--gold); font-size:.66rem; letter-spacing:.08em; }
+    .mobile-menu { opacity:0; visibility:hidden; transition:opacity .2s,visibility .2s; }
+    .mobile-menu.open { opacity:1; visibility:visible; }
+    .album-grid { display:grid; grid-template-columns:1fr; gap:1.1rem; }
+    .album-card { background:var(--panel); border:1px solid rgba(255,255,255,.07); border-radius:16px; overflow:hidden; transition:transform .24s,border-color .24s,box-shadow .24s; }
+    .album-card:hover { transform:translateY(-4px); border-color:rgba(229,193,88,.42); box-shadow:0 20px 50px rgba(0,0,0,.22); }
+    .preview-frame { position:relative; aspect-ratio:1.58/1; overflow:hidden; user-select:none; -webkit-user-select:none; background:radial-gradient(circle at 72% 28%,rgba(229,193,88,.25),transparent 27%),linear-gradient(135deg,#34302a,#191919 55%,#5b351c); }
+    .preview-frame[data-category="personal"] { background:radial-gradient(circle at 35% 45%,rgba(229,193,88,.3),transparent 32%),linear-gradient(135deg,#3c3028,#191919 55%,#513a35); }
+    .preview-frame[data-category="celebration"] { background:radial-gradient(circle at 62% 35%,rgba(249,115,22,.25),transparent 27%),linear-gradient(135deg,#33241e,#171717 58%,#533825); }
+    .preview-frame[data-category="sports_running"] { background:radial-gradient(circle at 63% 45%,rgba(229,193,88,.25),transparent 28%),linear-gradient(135deg,#282d2a,#171717 56%,#594328); }
+    .no-select { user-select:none; -webkit-user-select:none; -webkit-user-drag:none; }
+    .preview-image { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.8; filter:saturate(.82); pointer-events:none; }
+    .preview-image[src=""] { display:none; }
+    .preview-placeholder { position:absolute; inset:0; display:grid; place-items:center; color:rgba(245,241,232,.44); }
+    .preview-placeholder svg { width:50px; height:50px; stroke:currentColor; }
+    .watermark { position:absolute; inset:-30%; z-index:2; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); align-items:center; justify-items:center; transform:rotate(-34deg); pointer-events:none; user-select:none; -webkit-user-select:none; }
+    .watermark span { color:rgba(255,255,255,.23); font-size:clamp(.52rem,1.1vw,.78rem); font-weight:700; letter-spacing:.19em; white-space:nowrap; text-shadow:0 1px 5px rgba(0,0,0,.35); }
+    .cover-tag { position:absolute; z-index:3; left:14px; top:14px; border:1px solid rgba(229,193,88,.34); background:rgba(18,18,18,.78); color:#f3d987; border-radius:999px; padding:.35rem .65rem; font-size:.64rem; letter-spacing:.08em; backdrop-filter:blur(8px); }
+    .price-badge { border:1px solid rgba(229,193,88,.25); color:#f0d47f; background:rgba(229,193,88,.06); }
+    .control { width:100%; border:1px solid #35342f; border-radius:11px; background:#141413; color:#f5f1e8; padding:.76rem .88rem; }
+    .control::placeholder { color:#77736d; }
+    .btn-primary { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; border-radius:999px; background:var(--gold); color:#17140c; padding:.78rem 1.25rem; font-weight:700; transition:filter .2s,transform .2s; }
+    .btn-primary:hover { filter:brightness(1.08); transform:translateY(-1px); }
+    .btn-secondary { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; border:1px solid #47443a; border-radius:999px; color:#eee9dc; background:rgba(255,255,255,.025); padding:.72rem 1.1rem; transition:border-color .2s,background .2s; }
+    .btn-secondary:hover { border-color:var(--gold); background:rgba(229,193,88,.07); }
+    .btn-flame { background:var(--flame); color:#1b1008; }
+    .modal-backdrop { position:fixed; inset:0; z-index:80; display:none; align-items:center; justify-content:center; padding:1rem; background:rgba(0,0,0,.78); backdrop-filter:blur(8px); }
+    .modal-backdrop.open { display:flex; }
+    .modal-card { width:min(100%,540px); max-height:min(88vh,850px); overflow:auto; background:#1b1b19; border:1px solid rgba(229,193,88,.22); border-radius:20px; box-shadow:0 28px 100px rgba(0,0,0,.5); animation:modalIn .2s ease-out; }
+    @keyframes modalIn { from { opacity:0; transform:translateY(10px) scale(.99); } to { opacity:1; transform:translateY(0) scale(1); } }
+    .bottom-nav { padding-bottom:max(.55rem,env(safe-area-inset-bottom)); }
+    .toast { position:fixed; left:50%; bottom:6rem; z-index:120; transform:translate(-50%,15px); opacity:0; pointer-events:none; transition:all .25s; background:#26251f; border:1px solid rgba(229,193,88,.3); padding:.75rem 1rem; border-radius:12px; color:#fff2c5; max-width:min(90vw,480px); box-shadow:0 15px 45px rgba(0,0,0,.4); }
+    .toast.show { opacity:1; transform:translate(-50%,0); }
+    .admin-content { display:none; }
+    .admin-content.open { display:block; }
+    .pin-box { font-family:monospace; letter-spacing:.28em; }
+    @media (min-width:680px) { .album-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (min-width:1180px) { .album-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+    @media (max-width:1023px) {
+      .sidebar { display:none; }
+      .main-shell { margin-left:0; }
+      .hero { min-height:355px; }
+      .hero::before { background-image:linear-gradient(90deg,rgba(18,18,18,.96) 0%,rgba(18,18,18,.75) 56%,rgba(18,18,18,.25) 100%),var(--hero-image); background-position:center 55%; }
+    }
+    @media (max-width:639px) {
+      html { scroll-padding-top:4.5rem; }
+      .hero { min-height:390px; }
+      .hero::before { background-image:linear-gradient(90deg,rgba(18,18,18,.94),rgba(18,18,18,.73)),var(--hero-image); background-position:62% center; }
+      .hero-orb { width:125px;height:125px;right:-4%;top:10%; }
+      .watermark span { font-size:.51rem; letter-spacing:.13em; }
+    }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
+  </style>
+</head>
+<body>
+  <aside class="sidebar fixed inset-y-0 left-0 z-40 hidden lg:flex flex-col px-5 py-6">
+    <a href="#top" class="flex items-center gap-3 px-2" aria-label="ImagineWorks Studio beranda">
+      <span class="relative grid h-12 w-12 place-items-center overflow-hidden rounded-full border border-gold/50 bg-[#25231d] text-sm font-bold text-gold">
+        <img src="logo-05-01.jpg" alt="IMA" class="absolute inset-0 h-full w-full object-cover" onerror="if(this.dataset.retried){this.remove();this.parentElement.querySelector('.logo-fallback').classList.remove('hidden')}else{this.dataset.retried='true';this.src='assets/studio-mark.svg'}">
+        <span class="logo-fallback hidden">IMA</span>
+      </span>
+      <span><span class="block text-[.72rem] font-bold tracking-[.18em]">IMAGINEWORKS</span><span class="mt-1 block text-[.62rem] tracking-[.24em] text-stone-500">STUDIO</span></span>
+    </a>
+    <div class="gold-line my-8"></div>
+    <p class="eyebrow mb-3 px-3">Jelajahi</p>
+    <nav class="space-y-1" aria-label="Navigasi utama">
+      <a class="nav-link active" href="#gallery"><span class="nav-number">01</span><span>Galeri</span></a>
+      <a class="nav-link" href="#booking"><span class="nav-number">02</span><span>Booking Sesi</span></a>
+      <a class="nav-link" href="#orders"><span class="nav-number">03</span><span>Cek Pesanan</span></a>
+      <a class="nav-link" href="#photos"><span class="nav-number">04</span><span>Foto Saya</span></a>
+    </nav>
+    <div class="mt-auto rounded-2xl border border-gold/20 bg-gradient-to-br from-[#26241e] to-[#1a1a19] p-4">
+      <span class="eyebrow">Rencanakan Sesi</span>
+      <p class="mt-3 font-serif text-xl">Satu cerita,<br>dibingkai abadi.</p>
+      <a href="#booking" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-gold">Mulai rencana <span aria-hidden="true">↗</span></a>
+    </div>
+    <button id="adminReveal" class="mt-5 px-3 text-left text-xs text-stone-600 hover:text-gold" type="button">Akses studio</button>
+    <p class="mt-3 px-3 text-[.62rem] tracking-wider text-stone-600">© <span class="year-now"></span> IMAGINEWORKS</p>
+  </aside>
+
+  <div class="main-shell" id="top">
+    <header class="sticky top-0 z-50 border-b border-white/5 bg-[#121212]/95 backdrop-blur-lg">
+      <div class="ticker border-b border-white/[.04] py-2 text-[.63rem] tracking-[.12em] text-stone-400">
+        <div class="ticker-track"><span class="mx-8"><span class="text-gold">CATATAN STUDIO</span> — Jadwalkan sesi foto personal untuk momen yang ingin Anda simpan lebih lama.</span><span class="mx-8"><span class="text-gold">CATATAN STUDIO</span> — Jadwalkan sesi foto personal untuk momen yang ingin Anda simpan lebih lama.</span></div>
+      </div>
+      <div class="flex h-[58px] items-center justify-between px-4 sm:px-7 lg:px-10">
+        <a class="flex items-center gap-2.5 lg:hidden" href="#top">
+          <span class="grid h-9 w-9 place-items-center rounded-full border border-gold/50 bg-[#25231d] text-xs font-bold text-gold">IMA</span>
+          <span class="text-[.68rem] font-bold tracking-[.16em]">IMAGINEWORKS <span class="text-stone-500">STUDIO</span></span>
+        </a>
+        <div class="hidden text-xs tracking-[.18em] text-stone-500 lg:block">PHOTOGRAPHY, WITH INTENTION</div>
+        <div class="flex items-center gap-3">
+          <a href="#booking" class="hidden rounded-full border border-gold/35 px-4 py-2 text-xs font-semibold text-gold transition hover:bg-gold hover:text-ink sm:inline-flex">Jadwalkan Sesi</a>
+          <button id="mobileMenuButton" class="grid h-10 w-10 place-items-center rounded-full border border-white/10 text-stone-100 lg:hidden" aria-label="Buka menu" aria-expanded="false" type="button"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        </div>
+      </div>
+      <div id="mobileMenu" class="mobile-menu fixed inset-0 z-[70] bg-black/75 p-4 pt-20 lg:hidden">
+        <div class="mx-auto max-w-lg rounded-2xl border border-white/10 bg-[#171716] p-5 shadow-2xl">
+          <div class="mb-4 flex items-center justify-between"><p class="eyebrow">Navigasi Studio</p><button id="mobileMenuClose" class="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-xl text-stone-400" type="button" aria-label="Tutup menu">×</button></div>
+          <nav class="grid grid-cols-2 gap-2" aria-label="Navigasi mobile">
+            <a class="nav-link" href="#gallery"><span class="nav-number">01</span> Galeri</a><a class="nav-link" href="#booking"><span class="nav-number">02</span> Booking Sesi</a>
+            <a class="nav-link" href="#orders"><span class="nav-number">03</span> Cek Pesanan</a><a class="nav-link" href="#photos"><span class="nav-number">04</span> Foto Saya</a>
+            <button class="nav-link text-left" data-admin-reveal type="button"><span class="nav-number">✦</span> Akses studio</button>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="px-4 pt-5 sm:px-7 lg:px-10 lg:pt-8">
+        <div class="hero rounded-[22px] border border-white/[.07] p-6 sm:p-10 lg:p-14">
+          <div class="hero-orb"></div>
+          <div class="relative z-10 max-w-[620px]">
+            <span class="eyebrow">ImagineWorks Studio · Est. for your story</span>
+            <h1 class="serif mt-5 max-w-[600px] text-[2.6rem] leading-[1.08] sm:text-6xl">Capturing Your Imagination Into Reality</h1>
+            <p class="mt-5 max-w-[440px] text-sm leading-7 text-stone-300 sm:text-base">Ruang untuk momen personal, energi olahraga, dan perayaan yang layak dikenang.</p>
+            <div class="mt-7 flex flex-wrap gap-3"><a href="#gallery" class="btn-primary">Jelajahi Galeri <span aria-hidden="true">↗</span></a><a href="#booking" class="btn-secondary">Rencanakan Sesi</a></div>
+            <p id="connectionNote" class="mt-5 text-[.7rem] text-stone-500">Menghubungkan galeri studio…</p>
+          </div>
+          <div class="absolute bottom-5 right-6 hidden text-right text-[.6rem] tracking-[.23em] text-white/45 sm:block">LIGHT · MOMENT · MEMORY</div>
+        </div>
+      </section>
+
+      <section id="gallery" class="px-4 py-16 sm:px-7 lg:px-10 lg:py-20">
+        <div class="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+          <div><p class="eyebrow">01 / Pilihan Cerita</p><h2 class="serif mt-3 text-3xl sm:text-4xl">Galeri Studio</h2><p class="mt-2 max-w-xl text-sm leading-6 text-stone-400">Temukan album yang tepat. Pratinjau dilindungi watermark; detail akses penuh tersedia setelah pembelian.</p></div>
+          <span id="albumCount" class="text-xs tracking-[.12em] text-stone-500">— ALBUM</span>
+        </div>
+        <div class="mt-8 rounded-2xl border border-white/[.07] bg-panel p-4 sm:p-5">
+          <div class="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+            <label class="block text-xs text-stone-400">Kategori
+              <select id="categoryFilter" class="control mt-2"><option value="all">Semua Kategori</option><option value="sports_running">Sports/Lari</option><option value="personal">Sesi Personal</option><option value="celebration">Acara &amp; Perayaan</option></select>
+            </label>
+            <label class="block text-xs text-stone-400">Tanggal event
+              <input id="dateFilter" class="control mt-2" type="date" aria-label="Filter tanggal event">
+            </label>
+            <button id="clearFilters" class="btn-secondary h-[46px] sm:min-w-[122px]" type="button">Atur ulang</button>
+          </div>
+        </div>
+        <div id="galleryGrid" class="album-grid mt-6" aria-live="polite"></div>
+        <div id="emptyGallery" class="hidden mt-6 rounded-2xl border border-dashed border-white/10 p-10 text-center text-sm text-stone-400">Belum ada album yang cocok dengan filter ini.</div>
+      </section>
+
+      <section id="booking" class="border-y border-white/[.06] bg-[#171716] px-4 py-16 sm:px-7 lg:px-10 lg:py-20">
+        <div class="grid gap-10 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
+          <div><p class="eyebrow">02 / Booking Sesi</p><h2 class="serif mt-3 text-3xl leading-tight sm:text-4xl">Rencanakan momen<br>berikutnya.</h2><p class="mt-4 max-w-lg text-sm leading-7 text-stone-400">Ceritakan jenis sesi dan tanggal yang Anda inginkan. Tim studio akan membantu merancang pengalaman yang terasa personal.</p><div class="mt-7 flex items-center gap-4 text-xs text-stone-500"><span class="h-px w-12 bg-gold/60"></span>Personal · Sports · Celebration</div></div>
+          <form id="bookingForm" class="rounded-2xl border border-white/[.07] bg-[#1d1d1b] p-5 sm:p-7">
+            <div class="grid gap-4 sm:grid-cols-2"><label class="text-xs text-stone-400">Nama<input id="bookingName" required maxlength="80" class="control mt-2" placeholder="Nama Anda"></label><label class="text-xs text-stone-400">Jenis sesi<select id="bookingCategory" class="control mt-2"><option>Sesi Personal</option><option>Sports/Lari</option><option>Acara &amp; Perayaan</option></select></label></div>
+            <label class="mt-4 block text-xs text-stone-400">Tanggal pilihan<input id="bookingDate" required type="date" class="control mt-2"></label>
+            <label class="mt-4 block text-xs text-stone-400">Catatan singkat<textarea id="bookingNotes" rows="3" maxlength="400" class="control mt-2 resize-y" placeholder="Konsep, lokasi, atau hal yang ingin Anda abadikan…"></textarea></label>
+            <button class="btn-primary btn-flame mt-5 w-full" type="submit">Kirim Rencana via WhatsApp <span aria-hidden="true">↗</span></button>
+            <p class="mt-3 text-center text-[.68rem] text-stone-600">Nomor WhatsApp studio diatur melalui konfigurasi publik.</p>
+          </form>
+        </div>
+      </section>
+
+      <section id="orders" class="px-4 py-16 sm:px-7 lg:px-10 lg:py-20">
+        <div class="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
+          <div><p class="eyebrow">03 / Cek Pesanan</p><h2 class="serif mt-3 text-3xl sm:text-4xl">Pantau pembayaran.</h2><p class="mt-3 max-w-2xl text-sm leading-7 text-stone-400">Pesanan yang dibuat di browser ini tersimpan sementara pada sesi tab. Status lunas hanya dikonfirmasi oleh webhook Midtrans yang terverifikasi.</p></div>
+          <button id="checkOrderButton" class="btn-secondary" type="button">Cek status pesanan saya</button>
+        </div>
+        <div id="orderStatusBox" class="mt-6 hidden rounded-2xl border border-white/[.07] bg-panel p-5 text-sm"></div>
+      </section>
+
+      <section id="photos" class="border-y border-white/[.06] bg-[#171716] px-4 py-16 sm:px-7 lg:px-10 lg:py-20">
+        <div class="grid gap-10 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
+          <div><p class="eyebrow">04 / Foto Saya</p><h2 class="serif mt-3 text-3xl leading-tight sm:text-4xl">Kembali ke<br>kenangan Anda.</h2><p class="mt-4 max-w-lg text-sm leading-7 text-stone-400">Masukkan PIN enam digit yang diterima setelah pembayaran tervalidasi. Akses berlaku hingga 60 hari sejak PIN dibuat.</p><div class="mt-6 flex items-center gap-3 text-xs text-stone-500"><span class="grid h-9 w-9 place-items-center rounded-full border border-gold/25 text-gold">60</span>Hari masa akses foto</div></div>
+          <form id="pinLookupForm" class="rounded-2xl border border-white/[.07] bg-[#1d1d1b] p-5 sm:p-7">
+            <label for="pinInput" class="text-xs tracking-wider text-stone-400">PIN 6-DIGIT</label>
+            <input id="pinInput" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" class="control pin-box mt-2 text-center text-2xl" placeholder="••••••" required aria-label="Masukkan PIN enam digit">
+            <button class="btn-primary mt-4 w-full" type="submit">Verifikasi &amp; Cari Foto <span aria-hidden="true">↗</span></button>
+            <div id="pinResult" class="mt-4 hidden rounded-xl border border-white/10 bg-black/20 p-4" aria-live="polite"></div>
+          </form>
+        </div>
+      </section>
+
+      <section id="adminPanel" class="hidden px-4 py-16 sm:px-7 lg:px-10">
+        <div class="flex flex-wrap items-end justify-between gap-4"><div><p class="eyebrow">Studio / Admin</p><h2 class="serif mt-3 text-3xl">Control Panel</h2><p class="mt-2 text-sm text-stone-400">Akses data tetap dilindungi Supabase Auth dan kebijakan RLS.</p></div><button id="adminLogout" class="btn-secondary" type="button">Keluar</button></div>
+        <div id="adminLoginWrap" class="mt-6 max-w-xl rounded-2xl border border-white/10 bg-panel p-5 sm:p-7">
+          <form id="adminLoginForm" class="space-y-4"><label class="block text-xs text-stone-400">Email admin<input id="adminEmail" required type="email" autocomplete="username" class="control mt-2"></label><label class="block text-xs text-stone-400">Password<input id="adminPassword" required type="password" autocomplete="current-password" class="control mt-2"></label><button class="btn-primary w-full" type="submit">Masuk ke Studio</button></form>
+          <p id="adminLoginMessage" class="mt-3 text-xs text-rose-300"></p>
+        </div>
+        <div id="adminContent" class="admin-content mt-6 rounded-2xl border border-white/10 bg-panel p-5 sm:p-7">
+          <h3 class="serif text-2xl">Tambah album event</h3>
+          <form id="adminAlbumForm" class="mt-5 grid gap-4 md:grid-cols-2">
+            <label class="text-xs text-stone-400">Judul<input id="adminTitle" required maxlength="120" class="control mt-2"></label>
+            <label class="text-xs text-stone-400">Tanggal Event<input id="adminEventDate" required type="date" class="control mt-2"></label>
+            <label class="text-xs text-stone-400">Kategori<select id="adminCategory" class="control mt-2"><option value="sports_running">Sports/Lari</option><option value="personal">Sesi Personal</option><option value="celebration">Acara &amp; Perayaan</option></select></label>
+            <label class="text-xs text-stone-400">Tipe Harga<select id="adminPriceType" class="control mt-2"><option value="per_photo">Per lembar / eceran</option><option value="package">Per event / paket all-in</option></select></label>
+            <label class="text-xs text-stone-400 md:col-span-2">Nominal Rp<input id="adminPrice" required type="number" min="1" step="1" class="control mt-2" placeholder="Contoh: 15000"></label>
+            <label class="text-xs text-stone-400 md:col-span-2">Link Google Drive foto<input id="adminDriveUrl" required type="url" class="control mt-2" placeholder="https://drive.google.com/drive/folders/…"></label>
+            <label class="text-xs text-stone-400 md:col-span-2">URL preview (opsional)<input id="adminCoverUrl" type="url" class="control mt-2" placeholder="URL HTTPS untuk pratinjau ber-watermark"></label>
+            <p class="md:col-span-2 rounded-xl border border-orange-500/20 bg-orange-500/[.05] p-3 text-xs leading-5 text-orange-100/80">Gunakan file preview beresolusi rendah yang sudah di-watermark. Watermark CSS mengurangi penyalinan kasual, tetapi tidak mengamankan file sumber atau screenshot.</p>
+            <div class="md:col-span-2"><button class="btn-primary" type="submit">Simpan Album</button><p id="adminAlbumMessage" class="mt-3 text-xs text-stone-400"></p></div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-white/[.06] px-4 py-8 text-xs text-stone-600 sm:px-7 lg:px-10">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><span>© <span class="year-now"></span> ImagineWorks Studio. Dibuat untuk cerita Anda.</span><span>Studio access by invitation · <button data-admin-reveal class="text-stone-500 underline decoration-stone-700 underline-offset-4 hover:text-gold" type="button">Admin</button></span></div>
+    </footer>
+  </div>
+
+  <nav class="bottom-nav fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-white/10 bg-[#171716]/95 px-2 pt-2 backdrop-blur-lg lg:hidden" aria-label="Navigasi cepat">
+    <a class="flex flex-col items-center gap-1 py-1.5 text-[.58rem] text-stone-400" href="#gallery"><span class="text-base text-gold">◈</span>Galeri</a>
+    <a class="flex flex-col items-center gap-1 py-1.5 text-[.58rem] text-stone-400" href="#booking"><span class="text-base text-gold">＋</span>Booking</a>
+    <a class="flex flex-col items-center gap-1 py-1.5 text-[.58rem] text-stone-400" href="#orders"><span class="text-base text-gold">⌕</span>Pesanan</a>
+    <a class="flex flex-col items-center gap-1 py-1.5 text-[.58rem] text-stone-400" href="#photos"><span class="text-base text-gold">▣</span>Foto Saya</a>
+  </nav>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <div id="checkoutModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+    <div class="modal-card p-5 sm:p-7">
+      <div class="flex items-start justify-between gap-4"><div><p class="eyebrow">Checkout Aman</p><h2 id="checkoutTitle" class="serif mt-2 text-2xl">Siapkan pembayaran</h2><p id="checkoutAlbumTitle" class="mt-1 text-sm text-stone-400"></p></div><button class="close-modal grid h-9 w-9 place-items-center rounded-full border border-white/10 text-stone-400 hover:text-white" data-close="checkoutModal" aria-label="Tutup" type="button">×</button></div>
+      <div id="quantityPanel" class="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+        <div class="flex items-center justify-between gap-4"><div><p class="text-xs text-stone-400">Jumlah foto</p><p id="unitPrice" class="mt-1 text-sm font-semibold text-gold"></p></div><div class="flex items-center gap-3"><button id="qtyMinus" class="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-lg" type="button" aria-label="Kurangi jumlah">−</button><span id="qtyValue" class="min-w-6 text-center font-semibold">1</span><button id="qtyPlus" class="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-lg" type="button" aria-label="Tambah jumlah">+</button></div></div>
+      </div>
+      <div id="packagePanel" class="mt-6 hidden rounded-xl border border-gold/20 bg-gold/[.05] p-4 text-sm text-stone-300">Paket all-in: harga dikunci untuk seluruh event. Tidak ada pengaturan kuantitas foto.</div>
+      <div class="mt-4 flex items-center justify-between border-b border-white/10 pb-4"><span class="text-sm text-stone-400">Total pembayaran</span><strong id="checkoutTotal" class="text-xl text-gold">Rp0</strong></div>
+      <div id="checkoutBeforePayment" class="mt-5">
+        <p class="text-xs leading-5 text-stone-500">QRIS dinamis dibuat melalui backend Midtrans. Harga diverifikasi ulang dari data album di server sebelum transaksi dibuat.</p>
+        <button id="createPaymentButton" class="btn-primary mt-5 w-full" type="button">Buat QRIS Pembayaran <span aria-hidden="true">↗</span></button>
+      </div>
+      <div id="paymentQrPanel" class="mt-5 hidden text-center">
+        <div class="mx-auto grid min-h-[230px] w-[230px] place-items-center rounded-2xl bg-white p-3"><div id="qrCanvas"></div></div>
+        <p class="mt-4 text-sm font-semibold text-stone-200">Pindai QR dengan aplikasi pembayaran QRIS yang didukung.</p>
+        <p id="paymentOrderText" class="mt-2 break-all text-[.68rem] text-stone-500"></p>
+        <div class="mt-4 flex items-center justify-center gap-2 text-xs text-stone-400"><span class="h-2 w-2 animate-pulse rounded-full bg-gold"></span><span id="paymentStatusText">Menunggu pembayaran…</span></div>
+        <button id="manualCheckPayment" class="btn-secondary mt-4" type="button">Periksa status sekarang</button>
+      </div>
+      <p id="checkoutMessage" class="mt-4 text-xs text-rose-300"></p>
+    </div>
+  </div>
+
+  <div id="successModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+    <div class="modal-card p-6 text-center sm:p-8">
+      <button class="close-modal absolute right-5 top-5 grid h-9 w-9 place-items-center rounded-full border border-white/10 text-stone-400" data-close="successModal" aria-label="Tutup" type="button">×</button>
+      <span class="mx-auto grid h-14 w-14 place-items-center rounded-full border border-gold/35 bg-gold/10 text-2xl text-gold">✓</span>
+      <p class="eyebrow mt-5">Pembayaran Terkonfirmasi</p><h2 id="successTitle" class="serif mt-2 text-3xl">Kenangan Anda siap.</h2>
+      <p class="mt-3 text-sm leading-6 text-stone-400">Simpan PIN ini untuk membuka tautan foto Anda. Masa akses berakhir pada <span id="pinExpiry" class="text-stone-200"></span>.</p>
+      <div id="successPin" class="pin-box mt-6 rounded-2xl border border-gold/25 bg-black/25 py-5 text-3xl font-bold text-gold">••••••</div>
+      <div class="mt-4 flex flex-wrap justify-center gap-3"><button id="copyPinButton" class="btn-secondary" type="button">Salin PIN</button><button class="btn-primary" data-close="successModal" type="button">Selesai</button></div>
+      <p class="mt-5 text-[.68rem] leading-5 text-stone-600">PIN hanya ditampilkan setelah Midtrans mengonfirmasi pembayaran melalui webhook yang valid.</p>
+    </div>
+  </div>
+
+  <script src="./env.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" referrerpolicy="no-referrer"></script>
+  <script>
+  (() => {
+    'use strict';
+    const CONFIG = window.IMAGINEWORKS_CONFIG || {};
+    const CATEGORY_LABELS = { sports_running:'Sports/Lari', personal:'Sesi Personal', celebration:'Acara & Perayaan' };
+    const DEMO_ALBUMS = [
+      { id:'demo-run',title:'City Run · Golden Hour',event_date:'2026-11-02',category:'sports_running',price_type:'per_photo',price_per_photo:15000,package_price:null,cover_url:null },
+      { id:'demo-portrait',title:'Portrait Session · Atelier',event_date:'2026-11-08',category:'personal',price_type:'per_photo',price_per_photo:25000,package_price:null,cover_url:null },
+      { id:'demo-celebration',title:'An Evening to Remember',event_date:'2026-11-15',category:'celebration',price_type:'package',price_per_photo:null,package_price:550000,cover_url:null }
+    ];
+    const state = { albums:[], selectedAlbum:null, quantity:1, currentOrder:null, polling:false, pollTimer:null, supabase:null, admin:false };
+    const $ = (selector, root=document) => root.querySelector(selector);
+    const $$ = (selector, root=document) => [...root.querySelectorAll(selector)];
+    const escapeHtml = (value='') => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const money = value => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(value)||0);
+    const safeHttps = value => { try { const u = new URL(value); return u.protocol === 'https:' ? u.href : ''; } catch { return ''; } };
+    const configured = () => /^https:\/\/[\w.-]+\.supabase\.co\/?$/.test(String(CONFIG.SUPABASE_URL||'')) && String(CONFIG.SUPABASE_ANON_KEY||'').length > 20 && !String(CONFIG.SUPABASE_ANON_KEY).includes('YOUR_');
+    const toast = message => { const el=$('#toast'); el.textContent=message; el.classList.add('show'); clearTimeout(toast.timer); toast.timer=setTimeout(()=>el.classList.remove('show'),3200); };
+    const showModal = id => { const el=document.getElementById(id); if(el){el.classList.add('open');document.body.style.overflow='hidden';} };
+    const closeModal = id => { const el=document.getElementById(id); if(el){el.classList.remove('open');document.body.style.overflow='';} };
+    const setMessage = (selector, message, error=false) => { const el=$(selector); if(el){el.textContent=message;el.classList.toggle('text-rose-300',error);el.classList.toggle('text-stone-400',!error);} };
+    const functionUrl = () => String(CONFIG.FUNCTIONS_BASE_URL||`${String(CONFIG.SUPABASE_URL||'').replace(/\/$/,'')}/functions/v1`).replace(/\/$/,'');
+    async function invokeFunction(name, body) {
+      if (!CONFIG.FUNCTIONS_BASE_URL) return state.supabase.functions.invoke(name,{body});
+      const {data:authData}=await state.supabase.auth.getSession();
+      const headers={'apikey':String(CONFIG.SUPABASE_ANON_KEY||''),'Content-Type':'application/json'};
+      if(authData.session?.access_token) headers.Authorization=`Bearer ${authData.session.access_token}`;
+      const response=await fetch(`${functionUrl()}/${encodeURIComponent(name)}`,{method:'POST',headers,body:JSON.stringify(body)});
+      const data=await response.json().catch(()=>({ok:false,error:'Respons fungsi tidak valid.'}));
+      return {data,error:response.ok?null:new Error(data?.error||`HTTP ${response.status}`)};
+    }
+    const statusLabel = status => ({pending:'Menunggu pembayaran',paid:'Lunas',expired:'Kedaluwarsa',failed:'Gagal'}[status]||status||'Belum diketahui');
+
+    const heroUrl=String(CONFIG.HERO_IMAGE_URL||'/manus-storage/imagineworks-hero_4da0169e.jpg');
+    if (/^(https:\/\/|\/|\.\/)/.test(heroUrl)) {
+      document.documentElement.style.setProperty('--hero-image',`url("${heroUrl.replace(/["\\]/g,'')}")`);
+      const heroProbe=new Image();
+      heroProbe.onerror=()=>{const fallback=String(CONFIG.HERO_IMAGE_FALLBACK||'');if(fallback)document.documentElement.style.setProperty('--hero-image',`url("${fallback.replace(/["\\]/g,'')}")`);};
+      heroProbe.src=heroUrl;
+    }
+    document.querySelectorAll('.year-now').forEach(el=>el.textContent=new Date().getFullYear());
+    if (window.supabase && configured()) {
+      try { state.supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY); }
+      catch (error) { console.error('Supabase initialization failed',error); }
+    }
+
+    function renderGallery() {
+      const category=$('#categoryFilter').value, date=$('#dateFilter').value;
+      const matches=state.albums.filter(a=>(category==='all'||a.category===category)&&(!date||a.event_date===date));
+      $('#albumCount').textContent=`${matches.length.toString().padStart(2,'0')} ALBUM`;
+      $('#emptyGallery').classList.toggle('hidden',matches.length!==0);
+      $('#galleryGrid').innerHTML=matches.map(album=>{
+        const cover=safeHttps(album.cover_url||'');
+        const priceType=album.price_type==='package'?'PAKET ALL-IN':'PER FOTO';
+        const price=album.price_type==='package'?album.package_price:album.price_per_photo;
+        const category=escapeHtml(CATEGORY_LABELS[album.category]||'Sesi Studio');
+        return `<article class="album-card" data-album-card="${escapeHtml(album.id)}">
+          <div class="preview-frame" data-preview="true" data-category="${escapeHtml(album.category)}">
+            <div class="preview-placeholder" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke-width="1.2"><path d="M8 16h7l3-4h12l3 4h7a3 3 0 0 1 3 3v17a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V19a3 3 0 0 1 3-3Z"/><circle cx="24" cy="27" r="8"/><circle cx="37" cy="21" r="1" fill="currentColor"/></svg></div>
+            ${cover?`<img class="preview-image pointer-events-none select-none no-select" src="${escapeHtml(cover)}" alt="Pratinjau ber-watermark: ${escapeHtml(album.title)}" draggable="false" loading="lazy">`:''}
+            <div class="watermark no-select pointer-events-none select-none" aria-hidden="true">${Array.from({length:9},()=>'<span>IMAGINEWORKS STUDIO</span>').join('')}</div>
+            <span class="cover-tag">${category}</span>
+          </div>
+          <div class="p-4 sm:p-5"><div class="flex items-start justify-between gap-3"><div><p class="text-[.65rem] tracking-[.12em] text-stone-500">${escapeHtml(album.event_date||'Tanggal belum diatur')}</p><h3 class="serif mt-2 text-xl leading-snug">${escapeHtml(album.title)}</h3></div><span class="price-badge shrink-0 rounded-full px-2.5 py-1 text-[.58rem] tracking-wider">${priceType}</span></div>
+          <div class="mt-4 flex items-center justify-between gap-3"><p class="text-sm font-semibold text-gold">${money(price)}<span class="ml-1 text-[.65rem] font-normal text-stone-500">${album.price_type==='package'?'paket':'/ foto'}</span></p><button class="btn-secondary !px-4 !py-2 text-xs" type="button" data-buy="${escapeHtml(album.id)}">Lihat &amp; Beli</button></div></div>
+        </article>`;
+      }).join('');
+      $('#galleryGrid').querySelectorAll('.preview-image').forEach(img=>img.addEventListener('error',()=>img.remove(),{once:true}));
+    }
+
+    async function loadAlbums() {
+      const note=$('#connectionNote');
+      if (!state.supabase) { state.albums=DEMO_ALBUMS; note.textContent='Mode pratinjau — hubungkan Supabase untuk memuat album studio.'; note.classList.add('text-gold/80'); renderGallery(); return; }
+      try {
+        const {data,error}=await state.supabase.from('albums').select('id,title,event_date,category,price_type,price_per_photo,package_price,cover_url').eq('published',true).order('event_date',{ascending:false});
+        if(error) throw error;
+        state.albums=data||[];
+        note.textContent=state.albums.length?`${state.albums.length} album studio tersedia`:'Galeri terhubung — album baru akan tampil di sini.';
+        renderGallery();
+      } catch(error) {
+        console.error('Loading albums failed',error);
+        state.albums=DEMO_ALBUMS; note.textContent='Galeri Supabase belum siap. Menampilkan contoh; checkout nonaktif sampai backend dikonfigurasi.'; note.classList.add('text-amber-300'); renderGallery();
+      }
+    }
+
+    function openCheckout(id) {
+      const album=state.albums.find(a=>String(a.id)===String(id)); if(!album)return;
+      state.selectedAlbum=album; state.quantity=1;
+      $('#checkoutAlbumTitle').textContent=album.title;
+      const isPackage=album.price_type==='package';
+      $('#quantityPanel').classList.toggle('hidden',isPackage);
+      $('#packagePanel').classList.toggle('hidden',!isPackage);
+      $('#unitPrice').textContent=`${money(album.price_per_photo)} per foto`;
+      $('#qtyValue').textContent='1';
+      $('#checkoutBeforePayment').classList.remove('hidden');
+      $('#paymentQrPanel').classList.add('hidden');
+      $('#checkoutMessage').textContent='';
+      $('#qrCanvas').innerHTML='';
+      updateTotal();
+      showModal('checkoutModal');
+    }
+    function updateTotal() {
+      if(!state.selectedAlbum)return;
+      const a=state.selectedAlbum;
+      const total=a.price_type==='package'?Number(a.package_price):Number(a.price_per_photo)*state.quantity;
+      $('#checkoutTotal').textContent=money(total);
+      $('#qtyValue').textContent=String(state.quantity);
+    }
+    function getSavedOrder() { try { const raw=sessionStorage.getItem('iw_current_order'); return raw?JSON.parse(raw):null; } catch { return null; } }
+    function saveOrder(order) { state.currentOrder=order; try { sessionStorage.setItem('iw_current_order',JSON.stringify(order)); } catch {} }
+
+    async function createPayment() {
+      if(!state.supabase||!state.selectedAlbum||String(state.selectedAlbum.id).startsWith('demo-')) { $('#checkoutMessage').textContent='Mode demo: isi konfigurasi Supabase dan deploy Edge Functions sebelum membuat transaksi nyata.'; return; }
+      const button=$('#createPaymentButton'); button.disabled=true; button.textContent='Menyiapkan QRIS…'; $('#checkoutMessage').textContent='';
+      try {
+        const {data,error}=await invokeFunction('create-payment',{album_id:state.selectedAlbum.id,quantity:state.selectedAlbum.price_type==='package'?1:state.quantity});
+        if(error) throw new Error(error.message||'Fungsi pembayaran belum tersedia.');
+        if(!data||!data.ok||!data.order_id||!data.access_token||!data.qr_string) throw new Error(data?.error||'Backend belum mengembalikan data QRIS yang lengkap.');
+        const order={order_id:data.order_id,access_token:data.access_token,amount:data.amount,expires_at:data.expires_at,album_title:state.selectedAlbum.title};
+        saveOrder(order);
+        $('#checkoutBeforePayment').classList.add('hidden'); $('#paymentQrPanel').classList.remove('hidden');
+        $('#paymentOrderText').textContent=`ID pesanan: ${data.order_id} · ${money(data.amount)}`;
+        if(window.QRCode) new QRCode($('#qrCanvas'),{text:data.qr_string,width:204,height:204,colorDark:'#111111',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+        else { const fallback=document.createElement('p');fallback.className='max-w-[205px] break-all text-[.62rem] text-black';fallback.textContent=data.qr_string;$('#qrCanvas').appendChild(fallback); }
+        pollPayment();
+      } catch(error) { $('#checkoutMessage').textContent=error.message||'Pembayaran belum dapat dibuat.'; }
+      finally { button.disabled=false; button.innerHTML='Buat QRIS Pembayaran <span aria-hidden="true">↗</span>'; }
+    }
+
+    async function checkPayment(order=getSavedOrder(),fromPoll=false) {
+      if(!state.supabase||!order?.order_id||!order?.access_token)return null;
+      try {
+        const {data,error}=await invokeFunction('payment-status',{order_id:order.order_id,access_token:order.access_token});
+        if(error) throw error;
+        if(!data?.ok) throw new Error(data?.error||'Status pesanan belum dapat dibaca.');
+        state.currentOrder=order;
+        if(data.status==='paid'&&data.pin) {
+          state.polling=false; clearTimeout(state.pollTimer);
+          $('#paymentStatusText').textContent='Pembayaran terkonfirmasi.';
+          $('#successPin').textContent=data.pin;
+          $('#pinExpiry').textContent=new Intl.DateTimeFormat('id-ID',{dateStyle:'long'}).format(new Date(data.expires_at));
+          closeModal('checkoutModal'); showModal('successModal');
+          $('#orderStatusBox').classList.remove('hidden');
+          $('#orderStatusBox').innerHTML=`<div class="flex flex-wrap items-center justify-between gap-3"><div><p class="text-xs text-stone-500">${escapeHtml(order.order_id)}</p><p class="mt-1 font-semibold text-emerald-300">Pembayaran lunas</p><p class="mt-1 text-xs text-stone-400">${money(data.amount||order.amount)} · PIN akses sudah diterbitkan</p></div><a href="#photos" class="btn-secondary !px-4 !py-2 text-xs">Masukkan PIN</a></div>`;
+          return data;
+        }
+        if(data.status==='expired'||data.status==='failed') { $('#paymentStatusText').textContent=statusLabel(data.status); state.polling=false; clearTimeout(state.pollTimer); }
+        else if(!fromPoll) toast(`Status: ${statusLabel(data.status)}`);
+        return data;
+      } catch(error) { if(!fromPoll) toast(error.message||'Tidak dapat memeriksa status pesanan.'); return null; }
+    }
+    async function pollPayment() {
+      if(state.polling)return;
+      state.polling=true; let attempts=0;
+      const tick=async()=>{
+        if(!state.polling)return;
+        attempts++;
+        const order=getSavedOrder();
+        const result=await checkPayment(order,true);
+        if(!state.polling)return;
+        if(result?.status==='paid'||result?.status==='expired'||result?.status==='failed') { state.polling=false; return; }
+        if(attempts>=180) { state.polling=false; $('#paymentStatusText').textContent='Pengecekan otomatis berhenti. Anda masih dapat mengecek status pesanan.'; return; }
+        state.pollTimer=setTimeout(tick,5000);
+      };
+      state.pollTimer=setTimeout(tick,2500);
+    }
+
+    async function lookupPin(pin) {
+      const result=$('#pinResult'); result.classList.remove('hidden'); result.innerHTML='<p class="text-sm text-stone-400">Memeriksa PIN…</p>';
+      if(!state.supabase) { result.innerHTML='<p class="text-sm text-amber-200">Hubungkan Supabase dan deploy fungsi lookup-pin untuk memverifikasi PIN.</p>'; return; }
+      try {
+        const {data,error}=await invokeFunction('lookup-pin',{pin});
+        if(error) throw error;
+        if(!data?.ok) throw new Error(data?.error||'PIN tidak ditemukan atau tidak valid.');
+        if(data.expired) { result.innerHTML=`<p class="font-semibold text-rose-300">PIN sudah kadaluarsa</p><p class="mt-1 text-xs text-stone-400">Masa akses berakhir ${escapeHtml(new Intl.DateTimeFormat('id-ID',{dateStyle:'long'}).format(new Date(data.expires_at)))}.</p>`; return; }
+        const url=safeHttps(data.drive_url);
+        if(!url) throw new Error('Tautan unduhan tidak valid. Hubungi studio.');
+        result.innerHTML=`<p class="font-semibold text-emerald-300">PIN aktif · ${Number(data.days_left)||0} hari tersisa</p><p class="mt-1 text-xs text-stone-400">Berlaku sampai ${escapeHtml(new Intl.DateTimeFormat('id-ID',{dateStyle:'long'}).format(new Date(data.expires_at)))}.</p><a class="btn-primary mt-4 w-full" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Buka Folder Foto <span aria-hidden="true">↗</span></a><p class="mt-3 text-[.65rem] leading-5 text-stone-600">Akses Google Drive mengikuti pengaturan berbagi dari pemilik folder.</p>`;
+      } catch(error) { result.innerHTML=`<p class="text-sm text-rose-300">${escapeHtml(error.message||'PIN tidak dapat diverifikasi.')}</p>`; }
+    }
+
+    async function handleAdminLogin(event) {
+      event.preventDefault();
+      if(!state.supabase) { setMessage('#adminLoginMessage','Konfigurasi Supabase belum diisi.',true); return; }
+      setMessage('#adminLoginMessage','Memeriksa kredensial…');
+      const {data,error}=await state.supabase.auth.signInWithPassword({email:$('#adminEmail').value.trim(),password:$('#adminPassword').value});
+      if(error) { setMessage('#adminLoginMessage',error.message,true); return; }
+      if(data.user?.app_metadata?.role!=='admin') { await state.supabase.auth.signOut(); setMessage('#adminLoginMessage','Akun ini tidak memiliki role admin.',true); return; }
+      state.admin=true; $('#adminLoginWrap').classList.add('hidden'); $('#adminContent').classList.add('open'); setMessage('#adminLoginMessage',''); toast('Admin berhasil masuk.');
+    }
+    function revealAdmin() { $('#adminPanel').classList.remove('hidden'); $('#adminPanel').scrollIntoView({behavior:'smooth'}); }
+    async function submitAlbum(event) {
+      event.preventDefault(); if(!state.supabase||!state.admin) { setMessage('#adminAlbumMessage','Login admin diperlukan.',true); return; }
+      const type=$('#adminPriceType').value, value=Number($('#adminPrice').value);
+      const args={p_title:$('#adminTitle').value.trim(),p_event_date:$('#adminEventDate').value,p_category:$('#adminCategory').value,p_price_type:type,p_price:value,p_drive_url:$('#adminDriveUrl').value.trim(),p_cover_url:$('#adminCoverUrl').value.trim()||null};
+      setMessage('#adminAlbumMessage','Menyimpan album…');
+      const {error}=await state.supabase.rpc('admin_create_album',args);
+      if(error) { setMessage('#adminAlbumMessage',error.message||'Gagal menyimpan album.',true); return; }
+      $('#adminAlbumForm').reset(); setMessage('#adminAlbumMessage','Album berhasil ditambahkan.'); await loadAlbums();
+    }
+
+    $('#categoryFilter').addEventListener('change',renderGallery);
+    $('#dateFilter').addEventListener('input',renderGallery);
+    $('#clearFilters').addEventListener('click',()=>{$('#categoryFilter').value='all';$('#dateFilter').value='';renderGallery();});
+    $('#galleryGrid').addEventListener('click',event=>{const button=event.target.closest('[data-buy]');if(button)openCheckout(button.dataset.buy);});
+    document.addEventListener('contextmenu',event=>{if(event.target.closest('[data-preview]'))event.preventDefault();});
+    document.addEventListener('dragstart',event=>{if(event.target.closest('[data-preview]'))event.preventDefault();});
+    $('#qtyMinus').addEventListener('click',()=>{state.quantity=Math.max(1,state.quantity-1);updateTotal();});
+    $('#qtyPlus').addEventListener('click',()=>{state.quantity=Math.min(100,state.quantity+1);updateTotal();});
+    $('#createPaymentButton').addEventListener('click',createPayment);
+    $('#manualCheckPayment').addEventListener('click',()=>checkPayment(getSavedOrder()));
+    $('#checkOrderButton').addEventListener('click',async()=>{const order=getSavedOrder();const box=$('#orderStatusBox');box.classList.remove('hidden');if(!order){box.innerHTML='<p class="text-stone-400">Belum ada pesanan yang dibuat dari tab browser ini. Mulai dari album di galeri untuk membuat transaksi.</p>';return;}box.innerHTML=`<p class="text-xs text-stone-500">Pesanan ${escapeHtml(order.order_id)}</p><p class="mt-2 text-sm text-stone-300">Memeriksa status…</p>`;const data=await checkPayment(order);if(data&&data.status!=='paid')box.innerHTML=`<p class="text-xs text-stone-500">Pesanan ${escapeHtml(order.order_id)}</p><p class="mt-2 font-semibold ${data.status==='expired'||data.status==='failed'?'text-rose-300':'text-amber-200'}">${escapeHtml(statusLabel(data.status))}</p><p class="mt-1 text-xs text-stone-400">${money(data.amount||order.amount)}</p>`;});
+    $('#pinLookupForm').addEventListener('submit',event=>{event.preventDefault();const pin=$('#pinInput').value.trim();if(!/^\d{6}$/.test(pin)){toast('PIN harus terdiri dari enam digit.');return;}lookupPin(pin);});
+    $('#bookingForm').addEventListener('submit',event=>{event.preventDefault();const name=$('#bookingName').value.trim(),date=$('#bookingDate').value,category=$('#bookingCategory').value,notes=$('#bookingNotes').value.trim();const number=String(CONFIG.BOOKING_WHATSAPP||'').replace(/\D/g,'');if(!number){toast('Lengkapi BOOKING_WHATSAPP di env.js untuk menerima booking.');return;}const text=`Halo ImagineWorks Studio, saya ${name}. Saya ingin merencanakan ${category} pada ${date}.${notes?` Catatan: ${notes}`:''}`;window.open(`https://wa.me/${number}?text=${encodeURIComponent(text)}`,'_blank','noopener,noreferrer');});
+    $('#adminLoginForm').addEventListener('submit',handleAdminLogin);
+    $('#adminAlbumForm').addEventListener('submit',submitAlbum);
+    $('#adminLogout').addEventListener('click',async()=>{if(state.supabase)await state.supabase.auth.signOut();state.admin=false;$('#adminContent').classList.remove('open');$('#adminLoginWrap').classList.remove('hidden');toast('Admin keluar.');});
+    $('#adminReveal').addEventListener('click',revealAdmin);
+    const closeMobileMenu=()=>{$('#mobileMenu').classList.remove('open');$('#mobileMenuButton').setAttribute('aria-expanded','false');};
+    $('#mobileMenuButton').addEventListener('click',()=>{const menu=$('#mobileMenu'),open=!menu.classList.contains('open');menu.classList.toggle('open',open);$('#mobileMenuButton').setAttribute('aria-expanded',String(open));});
+    $('#mobileMenuClose').addEventListener('click',closeMobileMenu);
+    $('#mobileMenu').addEventListener('click',event=>{if(event.target===$('#mobileMenu'))closeMobileMenu();});
+    $$('#mobileMenu a').forEach(link=>link.addEventListener('click',closeMobileMenu));
+    $$('[data-admin-reveal]').forEach(button=>button.addEventListener('click',()=>{closeMobileMenu();revealAdmin();}));
+    $$('[data-close]').forEach(button=>button.addEventListener('click',()=>closeModal(button.dataset.close)));
+    $$('.modal-backdrop').forEach(backdrop=>backdrop.addEventListener('click',event=>{if(event.target===backdrop)closeModal(backdrop.id);}));
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'){ $$('.modal-backdrop.open').forEach(modal=>closeModal(modal.id)); closeMobileMenu(); }});
+    $('#copyPinButton').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('#successPin').textContent);toast('PIN berhasil disalin.');}catch{toast('Salin PIN secara manual.');}});
+    state.currentOrder=getSavedOrder();
+    loadAlbums();
+    if(state.supabase) state.supabase.auth.getSession().then(({data})=>{if(data.session?.user?.app_metadata?.role==='admin'){state.admin=true;$('#adminPanel').classList.remove('hidden');$('#adminLoginWrap').classList.add('hidden');$('#adminContent').classList.add('open');}});
+  })();
+  </script>
+</body>
+</html>
