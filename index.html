@@ -194,7 +194,7 @@
 
       <section id="orders" class="px-4 py-16 sm:px-7 lg:px-10 lg:py-20">
         <div class="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
-          <div><p class="eyebrow">03 / Cek Pesanan</p><h2 class="serif mt-3 text-3xl sm:text-4xl">Pantau pembayaran.</h2><p class="mt-3 max-w-2xl text-sm leading-7 text-stone-400">Pesanan yang dibuat di browser ini tersimpan sementara pada sesi tab. Status lunas hanya dikonfirmasi oleh webhook Midtrans yang terverifikasi.</p></div>
+          <div><p class="eyebrow">03 / Cek Pesanan</p><h2 class="serif mt-3 text-3xl sm:text-4xl">Pantau pembayaran.</h2><p class="mt-3 max-w-2xl text-sm leading-7 text-stone-400">Pesanan tersimpan sementara pada tab ini. Admin studio akan memeriksa transfer dan mengonfirmasi pembayaran sebelum PIN akses diterbitkan.</p></div>
           <button id="checkOrderButton" class="btn-secondary" type="button">Cek status pesanan saya</button>
         </div>
         <div id="orderStatusBox" class="mt-6 hidden rounded-2xl border border-white/[.07] bg-panel p-5 text-sm"></div>
@@ -219,6 +219,12 @@
           <p id="adminLoginMessage" class="mt-3 text-xs text-rose-300"></p>
         </div>
         <div id="adminContent" class="admin-content mt-6 rounded-2xl border border-white/10 bg-panel p-5 sm:p-7">
+          <section aria-labelledby="pendingOrdersTitle">
+            <div class="flex flex-wrap items-center justify-between gap-3"><div><h3 id="pendingOrdersTitle" class="serif text-2xl">Transfer menunggu konfirmasi</h3><p class="mt-1 text-xs text-stone-500">Periksa mutasi rekening sebelum menekan konfirmasi.</p></div><button id="refreshOrdersButton" class="btn-secondary !px-4 !py-2 text-xs" type="button">Muat ulang</button></div>
+            <p id="pendingOrdersMessage" class="mt-3 text-xs text-stone-400" aria-live="polite"></p>
+            <div id="pendingOrdersList" class="mt-3 grid gap-3"></div>
+          </section>
+          <div class="gold-line my-8"></div>
           <h3 class="serif text-2xl">Tambah album event</h3>
           <form id="adminAlbumForm" class="mt-5 grid gap-4 md:grid-cols-2">
             <label class="text-xs text-stone-400">Judul<input id="adminTitle" required maxlength="120" class="control mt-2"></label>
@@ -257,13 +263,21 @@
       <div id="packagePanel" class="mt-6 hidden rounded-xl border border-gold/20 bg-gold/[.05] p-4 text-sm text-stone-300">Paket all-in: harga dikunci untuk seluruh event. Tidak ada pengaturan kuantitas foto.</div>
       <div class="mt-4 flex items-center justify-between border-b border-white/10 pb-4"><span class="text-sm text-stone-400">Total pembayaran</span><strong id="checkoutTotal" class="text-xl text-gold">Rp0</strong></div>
       <div id="checkoutBeforePayment" class="mt-5">
-        <p class="text-xs leading-5 text-stone-500">QRIS dinamis dibuat melalui backend Midtrans. Harga diverifikasi ulang dari data album di server sebelum transaksi dibuat.</p>
-        <button id="createPaymentButton" class="btn-primary mt-5 w-full" type="button">Buat QRIS Pembayaran <span aria-hidden="true">↗</span></button>
+        <p class="text-xs leading-5 text-stone-500">Buat pesanan transfer. Total dihitung ulang oleh server. PIN baru diterbitkan setelah admin memeriksa pembayaran.</p>
+        <button id="createPaymentButton" class="btn-primary mt-5 w-full" type="button">Lanjut ke Transfer Manual <span aria-hidden="true">↗</span></button>
       </div>
-      <div id="paymentQrPanel" class="mt-5 hidden text-center">
-        <div class="mx-auto grid min-h-[230px] w-[230px] place-items-center rounded-2xl bg-white p-3"><div id="qrCanvas"></div></div>
-        <p class="mt-4 text-sm font-semibold text-stone-200">Pindai QR dengan aplikasi pembayaran QRIS yang didukung.</p>
-        <p id="paymentOrderText" class="mt-2 break-all text-[.68rem] text-stone-500"></p>
+      <div id="paymentTransferPanel" class="mt-5 hidden">
+        <div class="rounded-xl border border-gold/20 bg-gold/[.05] p-4">
+          <p class="text-xs uppercase tracking-wider text-gold">Transfer sesuai nominal berikut</p>
+          <p id="bankNameText" class="mt-3 font-semibold text-stone-100"></p>
+          <p id="accountNumberText" class="mt-1 select-all text-xl font-bold tracking-wider text-gold"></p>
+          <p id="accountHolderText" class="mt-1 text-xs text-stone-400"></p>
+          <p class="mt-3 text-xs text-stone-500">Total transfer</p>
+          <p id="transferAmountText" class="text-xl font-bold text-gold"></p>
+        </div>
+        <p id="paymentOrderText" class="mt-4 break-all text-[.68rem] text-stone-500"></p>
+        <p class="mt-3 text-xs leading-5 text-stone-400">Simpan ID pesanan ini dan kirim bukti transfer melalui WhatsApp studio. Pesanan akan tetap menunggu sampai admin memeriksa mutasi rekening.</p>
+        <a id="sendTransferProof" class="btn-secondary mt-4 w-full" target="_blank" rel="noopener noreferrer">Kirim bukti transfer via WhatsApp <span aria-hidden="true">↗</span></a>
         <div class="mt-4 flex items-center justify-center gap-2 text-xs text-stone-400"><span class="h-2 w-2 animate-pulse rounded-full bg-gold"></span><span id="paymentStatusText">Menunggu pembayaran…</span></div>
         <button id="manualCheckPayment" class="btn-secondary mt-4" type="button">Periksa status sekarang</button>
       </div>
@@ -279,13 +293,12 @@
       <p class="mt-3 text-sm leading-6 text-stone-400">Simpan PIN ini untuk membuka tautan foto Anda. Masa akses berakhir pada <span id="pinExpiry" class="text-stone-200"></span>.</p>
       <div id="successPin" class="pin-box mt-6 rounded-2xl border border-gold/25 bg-black/25 py-5 text-3xl font-bold text-gold">••••••</div>
       <div class="mt-4 flex flex-wrap justify-center gap-3"><button id="copyPinButton" class="btn-secondary" type="button">Salin PIN</button><button class="btn-primary" data-close="successModal" type="button">Selesai</button></div>
-      <p class="mt-5 text-[.68rem] leading-5 text-stone-600">PIN hanya ditampilkan setelah Midtrans mengonfirmasi pembayaran melalui webhook yang valid.</p>
+      <p class="mt-5 text-[.68rem] leading-5 text-stone-600">PIN hanya diterbitkan setelah admin studio mengonfirmasi transfer yang sudah diterima.</p>
     </div>
   </div>
 
   <script src="./env.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" referrerpolicy="no-referrer"></script>
   <script>
   (() => {
     'use strict';
@@ -381,9 +394,8 @@
       $('#unitPrice').textContent=`${money(album.price_per_photo)} per foto`;
       $('#qtyValue').textContent='1';
       $('#checkoutBeforePayment').classList.remove('hidden');
-      $('#paymentQrPanel').classList.add('hidden');
+      $('#paymentTransferPanel').classList.add('hidden');
       $('#checkoutMessage').textContent='';
-      $('#qrCanvas').innerHTML='';
       updateTotal();
       showModal('checkoutModal');
     }
@@ -399,20 +411,33 @@
 
     async function createPayment() {
       if(!state.supabase||!state.selectedAlbum||String(state.selectedAlbum.id).startsWith('demo-')) { $('#checkoutMessage').textContent='Mode demo: isi konfigurasi Supabase dan deploy Edge Functions sebelum membuat transaksi nyata.'; return; }
-      const button=$('#createPaymentButton'); button.disabled=true; button.textContent='Menyiapkan QRIS…'; $('#checkoutMessage').textContent='';
+      const bank=CONFIG.BANK_TRANSFER||{};
+      const bankName=String(bank.BANK_NAME||'').trim(), accountNumber=String(bank.ACCOUNT_NUMBER||'').trim(), accountHolder=String(bank.ACCOUNT_HOLDER||'').trim();
+      if(!bankName||!accountNumber||!accountHolder||[bankName,accountNumber,accountHolder].some(value=>/^(ISI_|YOUR_)/i.test(value))) { $('#checkoutMessage').textContent='Lengkapi BANK_TRANSFER di env.js dengan rekening studio sebelum menerima transfer.'; return; }
+      const button=$('#createPaymentButton'); button.disabled=true; button.textContent='Membuat pesanan…'; $('#checkoutMessage').textContent='';
       try {
         const {data,error}=await invokeFunction('create-payment',{album_id:state.selectedAlbum.id,quantity:state.selectedAlbum.price_type==='package'?1:state.quantity});
         if(error) throw new Error(error.message||'Fungsi pembayaran belum tersedia.');
-        if(!data||!data.ok||!data.order_id||!data.access_token||!data.qr_string) throw new Error(data?.error||'Backend belum mengembalikan data QRIS yang lengkap.');
-        const order={order_id:data.order_id,access_token:data.access_token,amount:data.amount,expires_at:data.expires_at,album_title:state.selectedAlbum.title};
+        if(!data||!data.ok||!data.order_id||!data.access_token||data.payment_method!=='manual_transfer') throw new Error(data?.error||'Backend belum mengembalikan data pesanan transfer yang lengkap.');
+        const order={order_id:data.order_id,access_token:data.access_token,amount:data.amount,album_title:state.selectedAlbum.title};
         saveOrder(order);
-        $('#checkoutBeforePayment').classList.add('hidden'); $('#paymentQrPanel').classList.remove('hidden');
-        $('#paymentOrderText').textContent=`ID pesanan: ${data.order_id} · ${money(data.amount)}`;
-        if(window.QRCode) new QRCode($('#qrCanvas'),{text:data.qr_string,width:204,height:204,colorDark:'#111111',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
-        else { const fallback=document.createElement('p');fallback.className='max-w-[205px] break-all text-[.62rem] text-black';fallback.textContent=data.qr_string;$('#qrCanvas').appendChild(fallback); }
+        $('#checkoutBeforePayment').classList.add('hidden'); $('#paymentTransferPanel').classList.remove('hidden');
+        $('#bankNameText').textContent=bankName;
+        $('#accountNumberText').textContent=accountNumber;
+        $('#accountHolderText').textContent=`a.n. ${accountHolder}`;
+        $('#transferAmountText').textContent=money(data.amount);
+        $('#paymentOrderText').textContent=`ID pesanan: ${data.order_id} · ${state.selectedAlbum.title}`;
+        $('#paymentStatusText').textContent='Menunggu pembayaran dan konfirmasi admin.';
+        const whatsapp=String(CONFIG.BOOKING_WHATSAPP||'').replace(/\D/g,'');
+        const proof=$('#sendTransferProof');
+        if(whatsapp) {
+          const text=`Halo ImagineWorks Studio, saya sudah transfer untuk pesanan ${data.order_id} (${state.selectedAlbum.title}) sebesar ${money(data.amount)}. Saya akan mengirim bukti transfer.`;
+          proof.href=`https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`;
+          proof.classList.remove('hidden');
+        } else proof.classList.add('hidden');
         pollPayment();
       } catch(error) { $('#checkoutMessage').textContent=error.message||'Pembayaran belum dapat dibuat.'; }
-      finally { button.disabled=false; button.innerHTML='Buat QRIS Pembayaran <span aria-hidden="true">↗</span>'; }
+      finally { button.disabled=false; button.innerHTML='Lanjut ke Transfer Manual <span aria-hidden="true">↗</span>'; }
     }
 
     async function checkPayment(order=getSavedOrder(),fromPoll=false) {
@@ -424,7 +449,7 @@
         state.currentOrder=order;
         if(data.status==='paid'&&data.pin) {
           state.polling=false; clearTimeout(state.pollTimer);
-          $('#paymentStatusText').textContent='Pembayaran terkonfirmasi.';
+          $('#paymentStatusText').textContent='Transfer dikonfirmasi admin.';
           $('#successPin').textContent=data.pin;
           $('#pinExpiry').textContent=new Intl.DateTimeFormat('id-ID',{dateStyle:'long'}).format(new Date(data.expires_at));
           closeModal('checkoutModal'); showModal('successModal');
@@ -474,7 +499,7 @@
       const {data,error}=await state.supabase.auth.signInWithPassword({email:$('#adminEmail').value.trim(),password:$('#adminPassword').value});
       if(error) { setMessage('#adminLoginMessage',error.message,true); return; }
       if(data.user?.app_metadata?.role!=='admin') { await state.supabase.auth.signOut(); setMessage('#adminLoginMessage','Akun ini tidak memiliki role admin.',true); return; }
-      state.admin=true; $('#adminLoginWrap').classList.add('hidden'); $('#adminContent').classList.add('open'); setMessage('#adminLoginMessage',''); toast('Admin berhasil masuk.');
+      state.admin=true; $('#adminLoginWrap').classList.add('hidden'); $('#adminContent').classList.add('open'); setMessage('#adminLoginMessage',''); toast('Admin berhasil masuk.'); await loadPendingOrders();
     }
     function revealAdmin() { $('#adminPanel').classList.remove('hidden'); $('#adminPanel').scrollIntoView({behavior:'smooth'}); }
     async function submitAlbum(event) {
@@ -485,6 +510,36 @@
       const {error}=await state.supabase.rpc('admin_create_album',args);
       if(error) { setMessage('#adminAlbumMessage',error.message||'Gagal menyimpan album.',true); return; }
       $('#adminAlbumForm').reset(); setMessage('#adminAlbumMessage','Album berhasil ditambahkan.'); await loadAlbums();
+    }
+    async function loadPendingOrders() {
+      if(!state.supabase||!state.admin)return;
+      const message=$('#pendingOrdersMessage'), list=$('#pendingOrdersList');
+      message.textContent='Memuat pesanan…'; list.innerHTML='';
+      const {data,error}=await state.supabase.rpc('admin_list_pending_orders');
+      if(error) { message.textContent=error.message||'Pesanan belum dapat dimuat.'; message.classList.add('text-rose-300'); return; }
+      message.classList.remove('text-rose-300');
+      if(!data?.length) { message.textContent='Tidak ada transfer yang menunggu konfirmasi.'; return; }
+      message.textContent=`${data.length} pesanan menunggu pemeriksaan.`;
+      list.innerHTML=data.map(order=>`<article class="rounded-xl border border-white/10 bg-black/20 p-4">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div><p class="break-all text-xs text-stone-500">${escapeHtml(order.order_id)}</p><h4 class="mt-1 font-semibold text-stone-100">${escapeHtml(order.album_title)}</h4><p class="mt-1 text-xs text-stone-400">${Number(order.quantity)} foto · ${money(order.gross_amount)} · ${escapeHtml(new Intl.DateTimeFormat('id-ID',{dateStyle:'medium',timeStyle:'short'}).format(new Date(order.created_at)))}</p></div>
+          <button class="btn-primary !px-4 !py-2 text-xs" type="button" data-confirm-order="${escapeHtml(order.order_id)}">Konfirmasi transfer</button>
+        </div>
+      </article>`).join('');
+    }
+    async function confirmManualOrder(orderId,button) {
+      if(!state.supabase||!state.admin||!window.confirm(`Konfirmasi bahwa transfer untuk ${orderId} sudah terlihat di mutasi rekening? PIN akses akan diterbitkan.`))return;
+      button.disabled=true; button.textContent='Memproses…';
+      try {
+        const {data,error}=await invokeFunction('admin-confirm-payment',{order_id:orderId});
+        if(error)throw new Error(error.message||'Konfirmasi gagal.');
+        if(!data?.ok)throw new Error(data?.error||'Konfirmasi gagal.');
+        toast(data.status==='already_paid'?'Pesanan ini sudah dikonfirmasi.':'Pembayaran dikonfirmasi; PIN dapat diambil pembeli melalui cek status.');
+        await loadPendingOrders();
+      } catch(error) {
+        toast(error.message||'Konfirmasi pembayaran gagal.');
+        button.disabled=false; button.textContent='Konfirmasi transfer';
+      }
     }
 
     $('#categoryFilter').addEventListener('change',renderGallery);
@@ -502,6 +557,8 @@
     $('#bookingForm').addEventListener('submit',event=>{event.preventDefault();const name=$('#bookingName').value.trim(),date=$('#bookingDate').value,category=$('#bookingCategory').value,notes=$('#bookingNotes').value.trim();const number=String(CONFIG.BOOKING_WHATSAPP||'').replace(/\D/g,'');if(!number){toast('Lengkapi BOOKING_WHATSAPP di env.js untuk menerima booking.');return;}const text=`Halo ImagineWorks Studio, saya ${name}. Saya ingin merencanakan ${category} pada ${date}.${notes?` Catatan: ${notes}`:''}`;window.open(`https://wa.me/${number}?text=${encodeURIComponent(text)}`,'_blank','noopener,noreferrer');});
     $('#adminLoginForm').addEventListener('submit',handleAdminLogin);
     $('#adminAlbumForm').addEventListener('submit',submitAlbum);
+    $('#refreshOrdersButton').addEventListener('click',loadPendingOrders);
+    $('#pendingOrdersList').addEventListener('click',event=>{const button=event.target.closest('[data-confirm-order]');if(button)confirmManualOrder(button.dataset.confirmOrder,button);});
     $('#adminLogout').addEventListener('click',async()=>{if(state.supabase)await state.supabase.auth.signOut();state.admin=false;$('#adminContent').classList.remove('open');$('#adminLoginWrap').classList.remove('hidden');toast('Admin keluar.');});
     $('#adminReveal').addEventListener('click',revealAdmin);
     const closeMobileMenu=()=>{$('#mobileMenu').classList.remove('open');$('#mobileMenuButton').setAttribute('aria-expanded','false');};
@@ -516,7 +573,7 @@
     $('#copyPinButton').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('#successPin').textContent);toast('PIN berhasil disalin.');}catch{toast('Salin PIN secara manual.');}});
     state.currentOrder=getSavedOrder();
     loadAlbums();
-    if(state.supabase) state.supabase.auth.getSession().then(({data})=>{if(data.session?.user?.app_metadata?.role==='admin'){state.admin=true;$('#adminPanel').classList.remove('hidden');$('#adminLoginWrap').classList.add('hidden');$('#adminContent').classList.add('open');}});
+    if(state.supabase) state.supabase.auth.getSession().then(async({data})=>{if(data.session?.user?.app_metadata?.role==='admin'){state.admin=true;$('#adminPanel').classList.remove('hidden');$('#adminLoginWrap').classList.add('hidden');$('#adminContent').classList.add('open');await loadPendingOrders();}});
   })();
   </script>
 </body>
