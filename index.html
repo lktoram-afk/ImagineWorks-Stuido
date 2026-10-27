@@ -242,11 +242,18 @@
             <label class="text-xs text-stone-400">Kategori<select id="adminCategory" class="control mt-2"><option value="sports_running">Sports/Lari</option><option value="personal">Sesi Personal</option><option value="celebration">Acara &amp; Perayaan</option></select></label>
             <label class="text-xs text-stone-400">Tipe Harga<select id="adminPriceType" class="control mt-2"><option value="per_photo">Per lembar / eceran</option><option value="package">Per event / paket all-in</option></select></label>
             <label class="text-xs text-stone-400 md:col-span-2">Nominal Rp<input id="adminPrice" required type="number" min="1" step="1" class="control mt-2" placeholder="Contoh: 15000"></label>
-            <label class="text-xs text-stone-400 md:col-span-2">Link Google Drive foto<input id="adminDriveUrl" required type="url" class="control mt-2" value="https://drive.google.com/drive/folders/1WntwQgbfq0f-BCLOhFknMQjIJZOTqUbk?usp=sharing"></label>
-            <label class="text-xs text-stone-400 md:col-span-2">URL preview (opsional)<input id="adminCoverUrl" type="url" class="control mt-2" placeholder="URL HTTPS untuk pratinjau ber-watermark"></label>
-            <p class="md:col-span-2 rounded-xl border border-orange-500/20 bg-orange-500/[.05] p-3 text-xs leading-5 text-orange-100/80">Foto di folder Drive ini dibaca dari folder publik. Siapa pun dengan link folder dapat melihat atau mengunduh foto asli tanpa PIN; watermark CSS hanya overlay tampilan dan tidak mengamankan file sumber.</p>
+            <label class="text-xs text-stone-400 md:col-span-2">URL cover opsional<input id="adminCoverUrl" type="url" class="control mt-2" placeholder="Cover otomatis memakai preview foto pertama yang diunggah"></label>
             <div class="md:col-span-2"><button class="btn-primary" type="submit">Simpan Album</button><p id="adminAlbumMessage" class="mt-3 text-xs text-stone-400"></p></div>
           </form>
+          <div class="mt-10 rounded-2xl border border-gold/20 bg-black/20 p-4 sm:p-5">
+            <div><h3 class="serif text-2xl">Upload foto album</h3><p class="mt-1 text-xs leading-5 text-stone-400">Foto asli disimpan private. Website membuat preview lebih kecil untuk galeri; foto asli hanya bisa diakses setelah PIN valid.</p></div>
+            <div class="mt-5 grid gap-4 md:grid-cols-2">
+              <label class="text-xs text-stone-400">Pilih album<select id="uploadAlbumSelect" class="control mt-2"><option value="">Muat album…</option></select></label>
+              <label class="text-xs text-stone-400">Pilih foto (JPG, PNG, WebP)<input id="adminPhotoFiles" class="control mt-2" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
+            </div>
+            <div class="mt-4 flex flex-wrap items-center gap-3"><button id="uploadPhotosButton" class="btn-primary" type="button">Upload foto</button><span id="adminUploadProgress" class="text-xs text-stone-400" aria-live="polite">Maksimum 50 MB per foto.</span></div>
+            <div id="uploadedPhotoList" class="mt-4 space-y-2 text-xs text-stone-400" aria-live="polite"></div>
+          </div>
         </div>
       </section>
     </main>
@@ -267,7 +274,7 @@
   <div id="albumGalleryModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="albumGalleryTitle">
     <div class="modal-card modal-wide p-4 sm:p-6" id="albumGalleryScroll">
       <div class="flex items-start justify-between gap-4"><div><p class="eyebrow">Pilih Foto Album</p><h2 id="albumGalleryTitle" class="serif mt-2 text-2xl sm:text-3xl"></h2><p id="albumGalleryMeta" class="mt-2 text-xs text-stone-400"></p></div><button class="close-modal grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/10 text-stone-400 hover:text-white" data-close="albumGalleryModal" aria-label="Tutup galeri album" type="button">×</button></div>
-      <p class="mt-4 rounded-xl border border-orange-500/20 bg-orange-500/[.05] p-3 text-xs leading-5 text-orange-100/80">Foto pada folder Drive ini dapat dilihat siapa pun yang memiliki link folder. Pilihan foto akan dicatat pada pesanan, tetapi tidak membatasi akses langsung ke folder publik.</p>
+      <p class="mt-4 rounded-xl border border-orange-500/20 bg-orange-500/[.05] p-3 text-xs leading-5 text-orange-100/80">Preview dapat disimpan pengunjung. File asli tetap privat dan hanya mendapat tautan unduh sementara setelah PIN valid.</p>
       <p id="albumGalleryMessage" class="mt-5 text-sm text-stone-400" role="status" aria-live="polite">Memuat foto…</p>
       <div id="albumPhotosGrid" class="photo-grid mt-5"></div>
       <div class="sticky bottom-0 mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 bg-[#1b1b19]/95 py-4 backdrop-blur">
@@ -327,7 +334,7 @@
       <button class="close-modal absolute right-5 top-5 grid h-9 w-9 place-items-center rounded-full border border-white/10 text-stone-400" data-close="successModal" aria-label="Tutup" type="button">×</button>
       <span class="mx-auto grid h-14 w-14 place-items-center rounded-full border border-gold/35 bg-gold/10 text-2xl text-gold">✓</span>
       <p class="eyebrow mt-5">Pembayaran Terkonfirmasi</p><h2 id="successTitle" class="serif mt-2 text-3xl">Kenangan Anda siap.</h2>
-      <p class="mt-3 text-sm leading-6 text-stone-400">Simpan PIN ini untuk membuka tautan foto Anda. Masa akses berakhir pada <span id="pinExpiry" class="text-stone-200"></span>.</p>
+      <p class="mt-3 text-sm leading-6 text-stone-400">Gunakan PIN untuk membuat tautan unduh sementara foto yang dibeli. Masa akses berakhir pada <span id="pinExpiry" class="text-stone-200"></span>.</p>
       <div id="successPin" class="pin-box mt-6 rounded-2xl border border-gold/25 bg-black/25 py-5 text-3xl font-bold text-gold">••••••</div>
       <div class="mt-4 flex flex-wrap justify-center gap-3"><button id="copyPinButton" class="btn-secondary" type="button">Salin PIN</button><button class="btn-primary" data-close="successModal" type="button">Selesai</button></div>
       <p class="mt-5 text-[.68rem] leading-5 text-stone-600">PIN hanya diterbitkan setelah admin studio mengonfirmasi transfer yang sudah diterima.</p>
@@ -337,6 +344,7 @@
   <script src="./env.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js" referrerpolicy="no-referrer"></script>
   <script>
   (() => {
     'use strict';
@@ -347,7 +355,7 @@
       { id:'demo-portrait',title:'Portrait Session · Atelier',event_date:'2026-11-08',category:'personal',price_type:'per_photo',price_per_photo:25000,package_price:null,cover_url:null },
       { id:'demo-celebration',title:'An Evening to Remember',event_date:'2026-11-15',category:'celebration',price_type:'package',price_per_photo:null,package_price:550000,cover_url:null }
     ];
-    const state = { albums:[], selectedAlbum:null, quantity:0, selectedPhotoIds:new Set(), drivePhotos:[], photoObjectUrls:[], galleryRequestId:0, currentOrder:null, polling:false, pollTimer:null, supabase:null, admin:false };
+    const state = { albums:[], selectedAlbum:null, quantity:0, selectedPhotoIds:new Set(), albumPhotos:[], galleryRequestId:0, currentOrder:null, polling:false, pollTimer:null, supabase:null, admin:false };
     const $ = (selector, root=document) => root.querySelector(selector);
     const $$ = (selector, root=document) => [...root.querySelectorAll(selector)];
     const escapeHtml = (value='') => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -356,7 +364,7 @@
     const configured = () => /^https:\/\/[\w.-]+\.supabase\.co\/?$/.test(String(CONFIG.SUPABASE_URL||'')) && String(CONFIG.SUPABASE_ANON_KEY||'').length > 20 && !String(CONFIG.SUPABASE_ANON_KEY).includes('YOUR_');
     const toast = message => { const el=$('#toast'); el.textContent=message; el.classList.add('show'); clearTimeout(toast.timer); toast.timer=setTimeout(()=>el.classList.remove('show'),3200); };
     const showModal = id => { const el=document.getElementById(id); if(el){el.classList.add('open');document.body.style.overflow='hidden';} };
-    const closeModal = id => { const el=document.getElementById(id); if(el){el.classList.remove('open');document.body.style.overflow='';} if(id==='albumGalleryModal'){state.galleryRequestId++;releasePhotoObjectUrls();} };
+    const closeModal = id => { const el=document.getElementById(id); if(el){el.classList.remove('open');document.body.style.overflow='';} if(id==='albumGalleryModal')state.galleryRequestId++; };
     const setMessage = (selector, message, error=false) => { const el=$(selector); if(el){el.textContent=message;el.classList.toggle('text-rose-300',error);el.classList.toggle('text-stone-400',!error);} };
     const functionUrl = () => String(CONFIG.FUNCTIONS_BASE_URL||`${String(CONFIG.SUPABASE_URL||'').replace(/\/$/,'')}/functions/v1`).replace(/\/$/,'');
     async function invokeFunction(name, body) {
@@ -370,7 +378,7 @@
     }
     const statusLabel = status => ({pending:'Menunggu pembayaran',paid:'Lunas',expired:'Kedaluwarsa',failed:'Gagal'}[status]||status||'Belum diketahui');
 
-    const heroUrl=String(CONFIG.HERO_IMAGE_URL||'/manus-storage/imagineworks-hero_4da0169e.jpg');
+    const heroUrl=String(CONFIG.HERO_IMAGE_URL||'./assets/imagineworks-hero.jpg');
     if (/^(https:\/\/|\/|\.\/)/.test(heroUrl)) {
       document.documentElement.style.setProperty('--hero-image',`url("${heroUrl.replace(/["\\]/g,'')}")`);
       const heroProbe=new Image();
@@ -407,62 +415,24 @@
       $('#galleryGrid').querySelectorAll('.preview-image').forEach(img=>img.addEventListener('error',()=>img.remove(),{once:true}));
     }
 
-    function releasePhotoObjectUrls() {
-      state.photoObjectUrls.forEach(url=>URL.revokeObjectURL(url));
-      state.photoObjectUrls=[];
-    }
-    async function loadDrivePhotoImage(img) {
-      if (!state.supabase || img.dataset.loading==='true') return;
-      img.dataset.loading='true';
-      const requestId=Number(img.dataset.galleryRequestId), albumId=img.dataset.albumId, fileId=img.dataset.driveFileId;
-      try {
-        const {data:authData}=await state.supabase.auth.getSession();
-        const anonKey=String(CONFIG.SUPABASE_ANON_KEY||'');
-        const headers={apikey:anonKey,Authorization:`Bearer ${authData.session?.access_token||anonKey}`,'Content-Type':'application/json'};
-        const response=await fetch(`${functionUrl()}/drive-image`,{method:'POST',headers,body:JSON.stringify({album_id:albumId,file_id:fileId})});
-        if (!response.ok) {
-          const detail=await response.json().catch(()=>({}));
-          throw new Error(detail.error||`Foto tidak dapat dimuat (HTTP ${response.status}).`);
-        }
-        const blob=await response.blob();
-        if (!blob.type.startsWith('image/')) throw new Error('Drive tidak mengirim file gambar.');
-        const objectUrl=URL.createObjectURL(blob);
-        if (requestId!==state.galleryRequestId) { URL.revokeObjectURL(objectUrl); return; }
-        state.photoObjectUrls.push(objectUrl);
-        img.src=objectUrl;
-        img.classList.remove('hidden');
-        const loader=img.parentElement.querySelector('.photo-loading');
-        if(loader)loader.remove();
-      } catch(error) {
-        if (requestId===state.galleryRequestId) {
-          const loader=img.parentElement.querySelector('.photo-loading');
-          if(loader)loader.textContent=error.message||'Foto gagal dimuat';
-        }
-      } finally { img.dataset.loading='false'; }
-    }
-    function observeDrivePhotoImages() {
-      const images=$$('img[data-drive-file-id]',$('#albumPhotosGrid'));
-      if ('IntersectionObserver' in window) {
-        const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
-          if(entry.isIntersecting){observer.unobserve(entry.target);loadDrivePhotoImage(entry.target);}
-        }),{root:$('#albumGalleryScroll'),rootMargin:'220px'});
-        images.forEach(img=>observer.observe(img));
-      } else images.forEach(loadDrivePhotoImage);
-    }
-    function renderDrivePhotos() {
+    function renderPhotoGallery() {
       const album=state.selectedAlbum;
-      const photos=state.drivePhotos;
+      const photos=state.albumPhotos;
       const grid=$('#albumPhotosGrid');
       if(!photos.length){grid.innerHTML='';return;}
       const packageMode=album.price_type==='package';
       grid.innerHTML=photos.map(photo=>{
         const selected=state.selectedPhotoIds.has(photo.id);
+        const preview=safeHttps(photo.preview_url||'');
         return `<button class="photo-tile ${selected?'selected':''}" type="button" data-photo-toggle="${escapeHtml(photo.id)}" aria-pressed="${selected}" ${packageMode?'disabled':''}>
-          <div class="photo-preview-frame" data-preview="true"><div class="photo-loading">Memuat foto…</div><img class="hidden pointer-events-none select-none no-select" data-drive-file-id="${escapeHtml(photo.id)}" data-album-id="${escapeHtml(album.id)}" data-gallery-request-id="${state.galleryRequestId}" alt="${escapeHtml(photo.name)}" draggable="false" loading="lazy"><div class="photo-watermark no-select" aria-hidden="true"><span>IMAGINEWORKS STUDIO</span><span>IMAGINEWORKS STUDIO</span><span>IMAGINEWORKS STUDIO</span><span>IMAGINEWORKS STUDIO</span></div></div>
+          <div class="photo-preview-frame" data-preview="true"><div class="photo-loading">${preview?'Memuat preview…':'Preview tidak tersedia'}</div>${preview?`<img class="photo-image pointer-events-none select-none no-select" src="${escapeHtml(preview)}" alt="Preview foto ${escapeHtml(photo.name)}" draggable="false" loading="lazy">`:''}<div class="photo-watermark no-select" aria-hidden="true"><span>IMAGINEWORKS STUDIO</span><span>IMAGINEWORKS STUDIO</span><span>IMAGINEWORKS STUDIO</span><span>IMAGINEWORKS STUDIO</span></div></div>
           <div class="flex min-h-14 items-center justify-between gap-2 p-3"><span class="break-all text-xs leading-5 text-stone-300">${escapeHtml(photo.name)}</span><span data-photo-selected class="shrink-0 text-[.65rem] font-semibold ${selected?'text-gold':'text-stone-500'}">${selected?'✓ Dipilih':'Pilih'}</span></div>
         </button>`;
       }).join('');
-      observeDrivePhotoImages();
+      grid.querySelectorAll('.photo-image').forEach(img=>{
+        img.addEventListener('load',()=>img.parentElement.querySelector('.photo-loading')?.remove(),{once:true});
+        img.addEventListener('error',()=>{const loader=img.parentElement.querySelector('.photo-loading');if(loader)loader.textContent='Preview gagal dimuat';img.remove();},{once:true});
+      });
     }
     function updateAlbumSelection() {
       const album=state.selectedAlbum;
@@ -481,10 +451,10 @@
         if(label){label.textContent=selected?'✓ Dipilih':'Pilih';label.classList.toggle('text-gold',selected);label.classList.toggle('text-stone-500',!selected);}
       });
     }
-    function toggleDrivePhoto(fileId) {
+    function togglePhoto(photoId) {
       if(state.selectedAlbum?.price_type==='package')return;
-      if(state.selectedPhotoIds.has(fileId))state.selectedPhotoIds.delete(fileId);
-      else if(state.selectedPhotoIds.size<100)state.selectedPhotoIds.add(fileId);
+      if(state.selectedPhotoIds.has(photoId))state.selectedPhotoIds.delete(photoId);
+      else if(state.selectedPhotoIds.size<100)state.selectedPhotoIds.add(photoId);
       else {toast('Maksimal 100 foto per order.');return;}
       updateAlbumSelection();
     }
@@ -493,9 +463,8 @@
       if(!album)return;
       state.galleryRequestId++;
       const requestId=state.galleryRequestId;
-      releasePhotoObjectUrls();
       state.selectedAlbum=album;
-      state.drivePhotos=[];
+      state.albumPhotos=[];
       state.selectedPhotoIds=new Set();
       $('#albumGalleryTitle').textContent=album.title;
       $('#albumGalleryMeta').textContent=`${album.event_date||'Tanggal belum diatur'} · ${CATEGORY_LABELS[album.category]||'Sesi Studio'} · ${album.price_type==='package'?`Paket ${money(album.package_price)}`:`${money(album.price_per_photo)} per foto`}`;
@@ -505,37 +474,46 @@
       updateAlbumSelection();
       showModal('albumGalleryModal');
       if(!state.supabase||String(album.id).startsWith('demo-')){
-        $('#albumGalleryMessage').textContent='Hubungkan Supabase dan Drive API, lalu tambahkan folder publik pada album admin untuk menampilkan foto.';
+        $('#albumGalleryMessage').textContent='Hubungkan Supabase dan unggah foto dari Control Panel admin untuk menampilkan album.';
         return;
       }
       try{
-        const {data,error}=await invokeFunction('drive-gallery',{album_id:album.id});
+        const {data,error}=await invokeFunction('photo-gallery',{album_id:album.id});
         if(error)throw new Error(error.message||'Daftar foto belum dapat dibaca.');
         if(requestId!==state.galleryRequestId)return;
-        if(!data?.ok||!Array.isArray(data.photos))throw new Error(data?.error||'Respons Drive tidak valid.');
-        state.drivePhotos=data.photos;
-        if(!state.drivePhotos.length){$('#albumGalleryMessage').textContent='Folder Drive ini belum memiliki foto gambar. Tambahkan file foto langsung ke dalam folder album.';return;}
-        if(album.price_type==='package')state.selectedPhotoIds=new Set(state.drivePhotos.map(photo=>photo.id));
+        if(!data?.ok||!Array.isArray(data.photos))throw new Error(data?.error||'Respons galeri tidak valid.');
+        state.albumPhotos=data.photos;
+        if(!state.albumPhotos.length){$('#albumGalleryMessage').textContent='Album ini belum memiliki foto. Admin dapat mengunggah foto dari Control Panel.';return;}
+        if(album.price_type==='package')state.selectedPhotoIds=new Set(state.albumPhotos.map(photo=>photo.id));
         $('#albumGalleryMessage').classList.add('hidden');
-        renderDrivePhotos();
+        renderPhotoGallery();
         updateAlbumSelection();
       }catch(error){
-        if(requestId===state.galleryRequestId)$('#albumGalleryMessage').textContent=error.message||'Daftar foto belum dapat dimuat. Pastikan folder Drive dapat diakses.';
+        if(requestId===state.galleryRequestId)$('#albumGalleryMessage').textContent=error.message||'Galeri belum dapat dimuat. Periksa konfigurasi Supabase Storage.';
       }
+    }
+
+    function renderUploadAlbumSelect(preferredId='') {
+      const select=$('#uploadAlbumSelect');
+      if(!select)return;
+      const current=preferredId||select.value;
+      const albums=state.albums.filter(album=>!String(album.id).startsWith('demo-'));
+      select.innerHTML='<option value="">Pilih album…</option>'+albums.map(album=>`<option value="${escapeHtml(album.id)}">${escapeHtml(album.title)} · ${escapeHtml(album.event_date||'')}</option>`).join('');
+      if(albums.some(album=>String(album.id)===String(current)))select.value=String(current);
     }
 
     async function loadAlbums() {
       const note=$('#connectionNote');
-      if (!state.supabase) { state.albums=DEMO_ALBUMS; note.textContent='Mode pratinjau — hubungkan Supabase untuk memuat album studio.'; note.classList.add('text-gold/80'); renderGallery(); return; }
+      if (!state.supabase) { state.albums=DEMO_ALBUMS; note.textContent='Mode pratinjau — hubungkan Supabase untuk memuat album studio.'; note.classList.add('text-gold/80'); renderGallery(); renderUploadAlbumSelect(); return; }
       try {
         const {data,error}=await state.supabase.from('albums').select('id,title,event_date,category,price_type,price_per_photo,package_price,cover_url').eq('published',true).order('event_date',{ascending:false});
         if(error) throw error;
         state.albums=data||[];
         note.textContent=state.albums.length?`${state.albums.length} album studio tersedia`:'Galeri terhubung — album baru akan tampil di sini.';
-        renderGallery();
+        renderGallery(); renderUploadAlbumSelect();
       } catch(error) {
         console.error('Loading albums failed',error);
-        state.albums=DEMO_ALBUMS; note.textContent='Galeri Supabase belum siap. Menampilkan contoh; checkout nonaktif sampai backend dikonfigurasi.'; note.classList.add('text-amber-300'); renderGallery();
+        state.albums=DEMO_ALBUMS; note.textContent='Galeri Supabase belum siap. Menampilkan contoh; checkout nonaktif sampai backend dikonfigurasi.'; note.classList.add('text-amber-300'); renderGallery(); renderUploadAlbumSelect();
       }
     }
 
@@ -557,7 +535,7 @@
       $('#manualBuyerName').value=''; $('#manualBuyerContact').value='';
       $('#unitPrice').textContent=`${money(album.price_per_photo)} per foto`;
       $('#qtyValue').textContent=String(state.selectedPhotoIds.size);
-      $('#checkoutPhotoNames').textContent=state.drivePhotos.filter(photo=>state.selectedPhotoIds.has(photo.id)).map(photo=>photo.name).join(' · ');
+      $('#checkoutPhotoNames').textContent=state.albumPhotos.filter(photo=>state.selectedPhotoIds.has(photo.id)).map(photo=>photo.name).join(' · ');
       $('#checkoutBeforePayment').classList.remove('hidden');
       $('#manualPaymentPanel').classList.add('hidden');
       $('#paymentQrPanel').classList.add('hidden');
@@ -687,9 +665,17 @@
         if(error) throw error;
         if(!data?.ok) throw new Error(data?.error||'PIN tidak ditemukan atau tidak valid.');
         if(data.expired) { result.innerHTML=`<p class="font-semibold text-rose-300">PIN sudah kadaluarsa</p><p class="mt-1 text-xs text-stone-400">Masa akses berakhir ${escapeHtml(new Intl.DateTimeFormat('id-ID',{dateStyle:'long'}).format(new Date(data.expires_at)))}.</p>`; return; }
-        const url=safeHttps(data.drive_url);
-        if(!url) throw new Error('Tautan unduhan tidak valid. Hubungi studio.');
-        result.innerHTML=`<p class="font-semibold text-emerald-300">PIN aktif · ${Number(data.days_left)||0} hari tersisa</p><p class="mt-1 text-xs text-stone-400">Berlaku sampai ${escapeHtml(new Intl.DateTimeFormat('id-ID',{dateStyle:'long'}).format(new Date(data.expires_at)))}.</p><a class="btn-primary mt-4 w-full" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Buka Folder Foto <span aria-hidden="true">↗</span></a><p class="mt-3 text-[.65rem] leading-5 text-stone-600">Akses Google Drive mengikuti pengaturan berbagi dari pemilik folder.</p>`;
+        const expiresText=escapeHtml(new Intl.DateTimeFormat('id-ID',{dateStyle:'long'}).format(new Date(data.expires_at)));
+        if(data.legacy_drive_url) {
+          const legacyUrl=safeHttps(data.legacy_drive_url);
+          if(!legacyUrl)throw new Error('Tautan foto lama tidak valid. Hubungi studio.');
+          result.innerHTML=`<p class="font-semibold text-emerald-300">PIN aktif · ${Number(data.days_left)||0} hari tersisa</p><p class="mt-1 text-xs text-stone-400">Berlaku sampai ${expiresText}.</p><a class="btn-primary mt-4 w-full" href="${escapeHtml(legacyUrl)}" target="_blank" rel="noopener noreferrer">Buka Foto Lama <span aria-hidden="true">↗</span></a>`;
+          return;
+        }
+        const photos=Array.isArray(data.photos)?data.photos:[];
+        if(!photos.length)throw new Error('Tidak ada foto unduhan untuk PIN ini. Hubungi studio.');
+        const photoLinks=photos.map(photo=>{const url=safeHttps(photo.url);if(!url)throw new Error('Tautan unduhan foto tidak valid. Hubungi studio.');return `<div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/20 p-3"><span class="min-w-0 flex-1 break-words text-xs text-stone-300">${escapeHtml(photo.name||'Foto')}</span><a class="btn-primary !px-4 !py-2 text-xs" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Unduh <span aria-hidden="true">↗</span></a></div>`;}).join('');
+        result.innerHTML=`<p class="font-semibold text-emerald-300">PIN aktif · ${Number(data.days_left)||0} hari tersisa</p><p class="mt-1 text-xs text-stone-400">Berlaku sampai ${expiresText}. Tautan unduh sementara berlaku sekitar satu jam; masukkan PIN lagi untuk membuat tautan baru.</p><div class="mt-4 space-y-2">${photoLinks}</div>`;
       } catch(error) { result.innerHTML=`<p class="text-sm text-rose-300">${escapeHtml(error.message||'PIN tidak dapat diverifikasi.')}</p>`; }
     }
 
@@ -728,18 +714,105 @@
     async function submitAlbum(event) {
       event.preventDefault(); if(!state.supabase||!state.admin) { setMessage('#adminAlbumMessage','Login admin diperlukan.',true); return; }
       const type=$('#adminPriceType').value, value=Number($('#adminPrice').value);
-      const args={p_title:$('#adminTitle').value.trim(),p_event_date:$('#adminEventDate').value,p_category:$('#adminCategory').value,p_price_type:type,p_price:value,p_drive_url:$('#adminDriveUrl').value.trim(),p_cover_url:$('#adminCoverUrl').value.trim()||null};
+      const args={p_title:$('#adminTitle').value.trim(),p_event_date:$('#adminEventDate').value,p_category:$('#adminCategory').value,p_price_type:type,p_price:value,p_drive_url:null,p_cover_url:$('#adminCoverUrl').value.trim()||null};
       setMessage('#adminAlbumMessage','Menyimpan album…');
-      const {error}=await state.supabase.rpc('admin_create_album',args);
+      const {data:albumId,error}=await state.supabase.rpc('admin_create_album',args);
       if(error) { setMessage('#adminAlbumMessage',error.message||'Gagal menyimpan album.',true); return; }
-      $('#adminAlbumForm').reset(); $('#adminDriveUrl').value=''; setMessage('#adminAlbumMessage','Album berhasil ditambahkan.'); await loadAlbums();
+      $('#adminAlbumForm').reset(); setMessage('#adminAlbumMessage','Album berhasil ditambahkan. Pilih album itu di panel upload untuk menambahkan foto.'); await loadAlbums(); renderUploadAlbumSelect(albumId);
+    }
+
+    const MAX_IMAGE_BYTES=50*1024*1024;
+    const MAX_PREVIEW_BYTES=5*1024*1024;
+    async function createPreviewBlob(file) {
+      const bitmap=await createImageBitmap(file);
+      const maxEdge=1600,scale=Math.min(1,maxEdge/Math.max(bitmap.width,bitmap.height));
+      const canvas=document.createElement('canvas'); canvas.width=Math.max(1,Math.round(bitmap.width*scale)); canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+      const context=canvas.getContext('2d'); if(!context){bitmap.close();throw new Error('Browser tidak dapat membuat preview.');}
+      context.drawImage(bitmap,0,0,canvas.width,canvas.height); bitmap.close();
+      for(const quality of [.82,.68,.54]) {
+        const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',quality));
+        if(blob&&blob.size<=MAX_PREVIEW_BYTES)return blob;
+      }
+      throw new Error('Preview lebih besar dari 5 MB. Coba foto lain atau ekspor foto dengan resolusi lebih kecil.');
+    }
+    function tusEndpoint() {
+      const base=new URL(CONFIG.SUPABASE_URL);
+      if(base.hostname.endsWith('.supabase.co')&&!base.hostname.endsWith('.storage.supabase.co')) {
+        const ref=base.hostname.slice(0,-'.supabase.co'.length);
+        return `${base.protocol}//${ref}.storage.supabase.co/storage/v1/upload/resumable`;
+      }
+      return `${base.origin}/storage/v1/upload/resumable`;
+    }
+    function uploadResumable(blob,bucket,path,accessToken,onProgress) {
+      if(!window.tus?.Upload)throw new Error('Klien upload resumable tidak tersedia. Muat ulang halaman dan coba lagi.');
+      return new Promise((resolve,reject)=>{
+        const upload=new window.tus.Upload(blob,{
+          endpoint:tusEndpoint(),chunkSize:6*1024*1024,retryDelays:[0,1000,3000,5000,10000],removeFingerprintOnSuccess:true,
+          headers:{apikey:String(CONFIG.SUPABASE_ANON_KEY||''),Authorization:`Bearer ${accessToken}`},
+          metadata:{bucketName:bucket,objectName:path,contentType:blob.type,cacheControl:'3600'},
+          onError:reject,onProgress:(uploaded,total)=>onProgress(total?uploaded/total:0),onSuccess:resolve
+        });
+        upload.start();
+      });
+    }
+    async function uploadAdminPhotos() {
+      const button=$('#uploadPhotosButton'),progress=$('#adminUploadProgress'),fileInput=$('#adminPhotoFiles'),albumId=$('#uploadAlbumSelect').value,files=[...fileInput.files];
+      if(!state.supabase||!state.admin){progress.textContent='Login admin diperlukan untuk upload.';return;}
+      if(!albumId){progress.textContent='Pilih album terlebih dahulu.';return;}
+      if(!files.length){progress.textContent='Pilih minimal satu file foto.';return;}
+      if(files.length>40){progress.textContent='Maksimum 40 foto per batch upload.';return;}
+      const invalidFile=files.find(file=>!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size<1||file.size>MAX_IMAGE_BYTES);
+      if(invalidFile){progress.textContent=`${invalidFile.name}: pilih JPEG, PNG, atau WebP berukuran maksimum 50 MB.`;return;}
+      const {data:authData}=await state.supabase.auth.getSession();
+      const session=authData?.session;
+      if(!session||session.user?.app_metadata?.role!=='admin'){progress.textContent='Sesi admin tidak valid. Login kembali.';return;}
+      const {count:existingPhotoCount,error:countError}=await state.supabase.from('album_photos').select('id',{count:'exact',head:true}).eq('album_id',albumId);
+      if(countError){progress.textContent=countError.message||'Jumlah foto album belum dapat diperiksa.';return;}
+      if((existingPhotoCount||0)+files.length>1000){progress.textContent='Maksimum 1.000 foto per album. Buat album tambahan untuk foto selebihnya.';return;}
+      button.disabled=true; $('#uploadedPhotoList').replaceChildren();
+      try {
+        for(let index=0;index<files.length;index++) {
+          const file=files[index];
+          if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error(`${file.name}: hanya JPEG, PNG, atau WebP yang diterima.`);
+          if(file.size<1||file.size>MAX_IMAGE_BYTES)throw new Error(`${file.name}: ukuran maksimum 50 MB per foto.`);
+          progress.textContent=`Menyiapkan preview ${index+1}/${files.length}: ${file.name}`;
+          const previewBlob=await createPreviewBlob(file),photoId=crypto.randomUUID();
+          const extension=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
+          const originalPath=`${albumId}/${photoId}.${extension}`,previewPath=`${albumId}/${photoId}.jpg`;
+          let originalUploaded=false,previewUploaded=false,recordCreated=false;
+          try {
+            await uploadResumable(file,'album-originals',originalPath,session.access_token,fraction=>{progress.textContent=`Upload foto ${index+1}/${files.length}: ${Math.round(((index+fraction)/files.length)*100)}%`;});
+            originalUploaded=true;
+            await uploadResumable(previewBlob,'album-previews',previewPath,session.access_token,fraction=>{progress.textContent=`Upload preview ${index+1}/${files.length}: ${Math.round(((index+fraction)/files.length)*100)}%`;});
+            previewUploaded=true;
+            const {error:insertError}=await state.supabase.from('album_photos').insert({album_id:albumId,file_name:file.name.slice(0,255),mime_type:file.type,byte_size:file.size,preview_path:previewPath,original_path:originalPath});
+            if(insertError)throw insertError;
+            recordCreated=true;
+            const targetAlbum=state.albums.find(album=>String(album.id)===String(albumId));
+            if(targetAlbum&&!targetAlbum.cover_url) {
+              const {data:cover}=state.supabase.storage.from('album-previews').getPublicUrl(previewPath);
+              const {error:coverError}=await state.supabase.rpc('admin_set_album_cover',{p_album_id:albumId,p_cover_url:cover.publicUrl});
+              if(!coverError)targetAlbum.cover_url=cover.publicUrl;
+            }
+            const item=document.createElement('p'); item.textContent=`✓ ${file.name}`; $('#uploadedPhotoList').append(item);
+          } catch(error) {
+            if(!recordCreated) {
+              if(previewUploaded)await state.supabase.storage.from('album-previews').remove([previewPath]).catch(()=>{});
+              if(originalUploaded)await state.supabase.storage.from('album-originals').remove([originalPath]).catch(()=>{});
+            }
+            throw new Error(`${file.name}: ${error.message||'upload gagal'}`);
+          }
+        }
+        progress.textContent=`Selesai: ${files.length} foto berhasil diunggah.`; fileInput.value=''; await loadAlbums(); renderUploadAlbumSelect(albumId);
+      } catch(error) { progress.textContent=error.message||'Upload foto gagal.'; }
+      finally { button.disabled=false; }
     }
 
     $('#categoryFilter').addEventListener('change',renderGallery);
     $('#dateFilter').addEventListener('input',renderGallery);
     $('#clearFilters').addEventListener('click',()=>{$('#categoryFilter').value='all';$('#dateFilter').value='';renderGallery();});
     $('#galleryGrid').addEventListener('click',event=>{const button=event.target.closest('[data-buy]');if(button)openAlbumGallery(button.dataset.buy);});
-    $('#albumPhotosGrid').addEventListener('click',event=>{const button=event.target.closest('[data-photo-toggle]');if(button&&!button.disabled)toggleDrivePhoto(button.dataset.photoToggle);});
+    $('#albumPhotosGrid').addEventListener('click',event=>{const button=event.target.closest('[data-photo-toggle]');if(button&&!button.disabled)togglePhoto(button.dataset.photoToggle);});
     $('#continueToCheckout').addEventListener('click',()=>{const albumId=state.selectedAlbum?.id;if(albumId){closeModal('albumGalleryModal');openCheckout(albumId);}});
     document.addEventListener('contextmenu',event=>{if(event.target.closest('[data-preview]'))event.preventDefault();});
     document.addEventListener('dragstart',event=>{if(event.target.closest('[data-preview]'))event.preventDefault();});
@@ -754,6 +827,7 @@
     $('#bookingForm').addEventListener('submit',event=>{event.preventDefault();const name=$('#bookingName').value.trim(),date=$('#bookingDate').value,category=$('#bookingCategory').value,notes=$('#bookingNotes').value.trim();const number=String(CONFIG.BOOKING_WHATSAPP||'').replace(/\D/g,'');if(!number){toast('Lengkapi BOOKING_WHATSAPP di env.js untuk menerima booking.');return;}const text=`Halo ImagineWorks Studio, saya ${name}. Saya ingin merencanakan ${category} pada ${date}.${notes?` Catatan: ${notes}`:''}`;window.open(`https://wa.me/${number}?text=${encodeURIComponent(text)}`,'_blank','noopener,noreferrer');});
     $('#adminLoginForm').addEventListener('submit',handleAdminLogin);
     $('#adminAlbumForm').addEventListener('submit',submitAlbum);
+    $('#uploadPhotosButton').addEventListener('click',uploadAdminPhotos);
     $('#adminLogout').addEventListener('click',async()=>{if(state.supabase)await state.supabase.auth.signOut();state.admin=false;$('#adminContent').classList.remove('open');$('#adminLoginWrap').classList.remove('hidden');toast('Admin keluar.');});
     $('#adminReveal').addEventListener('click',revealAdmin);
     const closeMobileMenu=()=>{$('#mobileMenu').classList.remove('open');$('#mobileMenuButton').setAttribute('aria-expanded','false');};
@@ -773,4 +847,3 @@
   </script>
 </body>
 </html>
-
