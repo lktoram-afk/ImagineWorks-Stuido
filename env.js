@@ -6,8 +6,8 @@
  */
 window.IMAGINEWORKS_CONFIG = Object.freeze({
   // Isi dari Supabase Dashboard > Project Settings > API.
-  SUPABASE_URL: "https://YOUR_PROJECT_REF.supabase.co",
-  SUPABASE_ANON_KEY: "YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY",
+  SUPABASE_URL: "https://gfhupmpyxjhgxklnuvqr.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaHVwbXB5eGpoZ3hrbG51dnFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5NzgyMTIsImV4cCI6MjEwODU1NDIxMn0.cUAuksVoDlVfCGq3ewCHW9diKHAbtMbwgclb4EDKE0g",
 
   // Mode aktif sekarang transfer manual; Midtrans belum dipakai.
   PAYMENT_MODE: "manual",
@@ -32,7 +32,7 @@ window.IMAGINEWORKS_CONFIG = Object.freeze({
   HERO_IMAGE_FALLBACK: "./assets/imagineworks-hero.jpg",
 
   // Nomor WhatsApp internasional tanpa tanda +. Kosongkan sampai nomor studio tersedia.
-  BOOKING_WHATSAPP: ""
+  BOOKING_WHATSAPP: "085349991313"
 });
 
 // PAYMENT_API_KEY / Midtrans Server Key sengaja tidak disediakan sebagai nilai frontend.
